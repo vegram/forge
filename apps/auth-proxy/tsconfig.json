@@ -1,0 +1,4 @@
+{
+  "extends": "@blade/tsconfig/base.json",
+  "include": ["routes"]
+}

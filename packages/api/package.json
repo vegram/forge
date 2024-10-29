@@ -1,0 +1,39 @@
+{
+  "name": "@blade/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@blade/auth": "workspace:*",
+    "@blade/db": "workspace:*",
+    "@blade/validators": "workspace:*",
+    "@trpc/server": "catalog:",
+    "superjson": "2.2.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@blade/eslint-config": "workspace:*",
+    "@blade/prettier-config": "workspace:*",
+    "@blade/tsconfig": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@blade/prettier-config"
+}
