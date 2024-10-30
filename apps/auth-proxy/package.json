@@ -4,13 +4,15 @@
   "type": "module",
   "scripts": {
     "build": "nitro build",
+    "start": "bun .output/server/index.mjs",
     "clean": "git clean -xdf .cache .nitro .output .turbo .vercel node_modules",
     "lint": "eslint",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@auth/core": "0.34.2"
+    "@auth/core": "0.34.2",
+    "bun": "^1.1.33"
   },
   "devDependencies": {
     "@blade/eslint-config": "workspace:*",
