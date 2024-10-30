@@ -99,6 +99,9 @@ importers:
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.0.0-rc.477
+      bun:
+        specifier: ^1.1.33
+        version: 1.1.33
       geist:
         specifier: ^1.3.1
         version: 1.3.1(next@14.2.15(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -200,6 +203,9 @@ importers:
       '@blade/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      bun:
+        specifier: ^1.1.33
+        version: 1.1.33
       geist:
         specifier: ^1.3.1
         version: 1.3.1(next@14.2.15(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
@@ -1327,6 +1333,46 @@ packages:
     resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
     engines: {node: '>=8.0.0'}
 
+  '@oven/bun-darwin-aarch64@1.1.33':
+    resolution: {integrity: sha512-HF2lVCkfKlugBwVVuwYb1AIiewCSKq+6KaojbRzMlZM2V2nBSfBE5wefRxfU76dJQIcnxnplX8GKiCd7rZeUfg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@oven/bun-darwin-x64-baseline@1.1.33':
+    resolution: {integrity: sha512-gjc4oiFhgqTVhC4LVfhqevuacmHHucmzPK4tsQshU0GdPdbvSihfpbFrK74+uPXipV+pJ2zIg2UK2OJpUblMng==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oven/bun-darwin-x64@1.1.33':
+    resolution: {integrity: sha512-Smc0Au8CPPmD4rYEOnhW+lxvVZVcnPkWXPMObl8cPOuV3Ue8cVZQVsbP6deumLfECrDvthsCPVKx2fRPYUixJQ==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oven/bun-linux-aarch64@1.1.33':
+    resolution: {integrity: sha512-HpD4t8Ip4BswMVoCmT97fjNUlPP+HNWp18PaarLLx6WhU8A1Ua9XyX1W1UjEYqjrAsEMs972H69e+76ZSRX+Pw==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@oven/bun-linux-x64-baseline@1.1.33':
+    resolution: {integrity: sha512-u/VKLCdozwjKk+8en3EMK1ZQGSnnYIZR85w8bU60ZPzFau+jV43TkqBTWYi9JzDxNDMR66b18iWuxlPNUBK7ew==}
+    cpu: [x64]
+    os: [linux]
+
+  '@oven/bun-linux-x64@1.1.33':
+    resolution: {integrity: sha512-aODJGbky+osqyh7T4LITqu5CJYq9XAz5f507EJIBwBU3ZbYQ/1eNv+0nu5wHvTafj29g8tlBhgVDpkrWc3u3pA==}
+    cpu: [x64]
+    os: [linux]
+
+  '@oven/bun-windows-x64-baseline@1.1.33':
+    resolution: {integrity: sha512-Ouiiv7bVPuoqjFCXc4HiRJ+ttrGiNsXQfv/8Wtsc5bSBuBBCjmKy0I2MpFXZV3YSi8Jp7LEzoYM0Kv1AvX7ySQ==}
+    cpu: [x64]
+    os: [win32]
+
+  '@oven/bun-windows-x64@1.1.33':
+    resolution: {integrity: sha512-ldFk0tywL1m56RzVXYbO+0s48N1/UGPpAay/yN7zYR5LM/A97YGEtCydc2tULwI7uabQgzDI423LDL184uR6ig==}
+    cpu: [x64]
+    os: [win32]
+
   '@panva/hkdf@1.2.1':
     resolution: {integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==}
 
@@ -2295,6 +2341,12 @@ packages:
   bufferutil@4.0.8:
     resolution: {integrity: sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==}
     engines: {node: '>=6.14.2'}
+
+  bun@1.1.33:
+    resolution: {integrity: sha512-pNcxhsh87TURsaXwwLnOggb1HWdSDgOOjupTuXINmQUZeZ4UzLeVK8h8trzIVA0ECijDex94AkAQ5/JG4r5gkg==}
+    cpu: [arm64, x64]
+    os: [darwin, linux, win32]
+    hasBin: true
 
   busboy@1.6.0:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
@@ -5862,6 +5914,30 @@ snapshots:
   '@opentelemetry/api@1.9.0':
     optional: true
 
+  '@oven/bun-darwin-aarch64@1.1.33':
+    optional: true
+
+  '@oven/bun-darwin-x64-baseline@1.1.33':
+    optional: true
+
+  '@oven/bun-darwin-x64@1.1.33':
+    optional: true
+
+  '@oven/bun-linux-aarch64@1.1.33':
+    optional: true
+
+  '@oven/bun-linux-x64-baseline@1.1.33':
+    optional: true
+
+  '@oven/bun-linux-x64@1.1.33':
+    optional: true
+
+  '@oven/bun-windows-x64-baseline@1.1.33':
+    optional: true
+
+  '@oven/bun-windows-x64@1.1.33':
+    optional: true
+
   '@panva/hkdf@1.2.1': {}
 
   '@parcel/watcher-android-arm64@2.4.1':
@@ -6829,6 +6905,17 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.2
     optional: true
+
+  bun@1.1.33:
+    optionalDependencies:
+      '@oven/bun-darwin-aarch64': 1.1.33
+      '@oven/bun-darwin-x64': 1.1.33
+      '@oven/bun-darwin-x64-baseline': 1.1.33
+      '@oven/bun-linux-aarch64': 1.1.33
+      '@oven/bun-linux-x64': 1.1.33
+      '@oven/bun-linux-x64-baseline': 1.1.33
+      '@oven/bun-windows-x64': 1.1.33
+      '@oven/bun-windows-x64-baseline': 1.1.33
 
   busboy@1.6.0:
     dependencies:
