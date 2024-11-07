@@ -5,12 +5,11 @@ Welcome aboard and thank you for considering contributing to Blade! We appreciat
 ## 📦 Setup
 
 1. Install [Node LTS](https://nodejs.org/en/download/)
-2. Install [Bun](https://bun.sh/docs/installation)
-3. Install [pnpm](https://pnpm.io/installation)
-4. Install [Docker](https://docs.docker.com/get-docker/)
-5. Clone this repository
-6. Change directory to the root of the repository
-7. Install project dependencies with `pnpm install`
+2. Install [pnpm](https://pnpm.io/installation)
+3. Install [Docker](https://docs.docker.com/get-docker/)
+4. Clone this repository
+5. Change directory to the root of the repository
+6. Install project dependencies with `pnpm install`
 
 ### Environment Variables
 
