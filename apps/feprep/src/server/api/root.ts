@@ -5,6 +5,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { codeRouter } from "./routers/code";
+import { commentRouter } from "./routers/comments";
 
 /**
  * This is the primary router for your server.
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   greeting: publicProcedure.query(() => "Hello, world!"),
   getSecretMessage: protectedProcedure.query(() => "This is a secret message."),
   code: codeRouter,
+  comment: commentRouter,
 });
 
 // export type definition of API
