@@ -448,6 +448,7 @@ export const HACKATHON_APPLICATION_STATES = [
 
 export const SCHOOLS = [
   "The University of Central Florida",
+  "Valencia College",
   "Florida International University",
   "The University of South Florida",
   "The University of Florida",
@@ -2518,7 +2519,6 @@ export const SCHOOLS = [
   "VIA University College",
   "VNS Group of Institutions",
   "Vadodara Institute of Engineering",
-  "Valencia College",
   "Valley Christian High School",
   "Valley High School",
   "Vallurupalli Nageswara Rao Vignana Jyothi Institute of Engg. Technology (VNRVJIET)",
