@@ -3,7 +3,6 @@ import { Pool } from "pg";
 
 import { env } from "../env";
 import * as authSchema from "./schemas/auth";
-import * as feprepSchema from "./schemas/feprep";
 import * as knightHacksSchema from "./schemas/knight-hacks";
 
 const pool = new Pool({
@@ -12,6 +11,6 @@ const pool = new Pool({
 
 export const db = drizzle({
   client: pool,
-  schema: { ...authSchema, ...knightHacksSchema, ...feprepSchema },
+  schema: { ...authSchema, ...knightHacksSchema },
   casing: "snake_case",
 });
