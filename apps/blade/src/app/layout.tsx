@@ -8,7 +8,7 @@ import { Toaster } from "@forge/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
-import "~/blade/globals.css";
+import "./globals.css";
 
 import { env } from "~/env";
 
