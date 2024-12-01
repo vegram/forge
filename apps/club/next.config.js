@@ -2,6 +2,9 @@
 const config = {
   output: "export",
   reactStrictMode: true,
+  images: {
+    unoptimized: true,
+  },
 
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: ["@forge/ui"],
