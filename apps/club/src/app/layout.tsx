@@ -16,13 +16,13 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://club.knighthacks.org"),
-  title: "Blade",
-  description: "The centralized platform for all things Knight Hacks",
+  title: "Knight Hacks",
+  description: "UCF's largest hackathon and software engineering organization",
   openGraph: {
-    title: "Blade",
+    title: "Knight Hacks",
     description: "The centralized platform for all things Knight Hacks",
-    url: "https://blade.knighthacks.org",
-    siteName: "Blade",
+    url: "https://club.knighthacks.org",
+    siteName: "UCF's largest hackathon and software engineering organization",
   },
 };
 
