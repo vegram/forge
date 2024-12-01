@@ -14,22 +14,17 @@ import { env } from "~/env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    env.VERCEL_ENV === "production"
-      ? "https://turbo.t3.gg"
+    env.NODE_ENV === "production"
+      ? "https://blade.knighthacks.org"
       : "http://localhost:3000",
   ),
-  title: "Create T3 Turbo",
-  description: "Simple monorepo with shared backend for web & mobile apps",
+  title: "Blade",
+  description: "The centralized platform for all things Knight Hacks",
   openGraph: {
-    title: "Create T3 Turbo",
-    description: "Simple monorepo with shared backend for web & mobile apps",
-    url: "https://create-t3-turbo.vercel.app",
-    siteName: "Create T3 Turbo",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@jullerino",
-    creator: "@jullerino",
+    title: "Blade",
+    description: "The centralized platform for all things Knight Hacks",
+    url: "https://blade.knighthacks.org",
+    siteName: "Blade",
   },
 };
 
