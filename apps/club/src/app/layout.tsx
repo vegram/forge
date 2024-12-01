@@ -20,7 +20,8 @@ export const metadata: Metadata = {
   description: "UCF's largest hackathon and software engineering organization",
   openGraph: {
     title: "Knight Hacks",
-    description: "The centralized platform for all things Knight Hacks",
+    description:
+      "UCF's largest hackathon and software engineering organization",
     url: "https://club.knighthacks.org",
     siteName: "UCF's largest hackathon and software engineering organization",
   },
