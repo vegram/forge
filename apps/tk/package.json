@@ -7,11 +7,11 @@
   "scripts": {
     "dev": "pnpm with-env tsx watch src/index.ts",
     "start": "pnpm with-env tsx src/index.ts",
+    "build": "pnpm with-env tsx src/deploy-commands.ts",
     "format": "prettier --write \"**/*.{json,ts}\"",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --",
-    "deploy:commands": "pnpm with-env tsx src/deploy-commands.ts"
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@forge/consts": "workspace:*",
