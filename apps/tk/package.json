@@ -16,9 +16,11 @@
   "dependencies": {
     "@forge/consts": "workspace:*",
     "@forge/db": "workspace:*",
+    "@t3-oss/env-core": "^0.11.1",
     "discord.js": "^14.16.3",
     "jimp": "^0.22.12",
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@forge/eslint-config": "workspace:*",

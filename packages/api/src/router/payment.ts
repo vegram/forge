@@ -1,7 +1,7 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import Stripe from "stripe";
 
-import { env } from "@forge/api/env";
+import { env } from "../env";
 import { KNIGHTHACKS_MEMBERSHIP_PRICE } from "@forge/consts/knight-hacks";
 
 import { protectedProcedure } from "../trpc";
