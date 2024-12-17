@@ -51,6 +51,7 @@
     }
   },
   "globalEnv": [
+    "PORT",
     "DATABASE_URL",
     "NEXTAUTH_SECRET",
     "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
