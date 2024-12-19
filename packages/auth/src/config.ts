@@ -44,6 +44,7 @@ export const authConfig = {
           name: profile.username,
           email: profile.email,
           image: profile.avatar,
+          id: profile.id,
         };
       },
     }),
