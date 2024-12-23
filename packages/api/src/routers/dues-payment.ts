@@ -4,9 +4,9 @@ import { KNIGHTHACKS_MEMBERSHIP_PRICE } from "@forge/consts/knight-hacks";
 
 import { env } from "../env";
 import { protectedProcedure } from "../trpc";
-import { stripe } from "../utils/stripe";
+import { stripe } from "../utils";
 
-export const paymentRouter = {
+export const duesPaymentRouter = {
   createCheckout: protectedProcedure.mutation(async () => {
     const baseUrl =
       env.NODE_ENV === "development"

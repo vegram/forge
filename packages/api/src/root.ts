@@ -1,11 +1,11 @@
 import { authRouter } from "./routers/auth";
+import { duesPaymentRouter } from "./routers/dues-payment";
 import { memberRouter } from "./routers/member";
-import { paymentRouter } from "./routers/payment";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   auth: authRouter,
-  payment: paymentRouter,
+  duesPayment: duesPaymentRouter,
   member: memberRouter,
 });
 

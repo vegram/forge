@@ -8,7 +8,7 @@ import { api } from "~/trpc/react";
 
 export default function Payment() {
   const { mutateAsync: createCheckoutUrl } =
-    api.payment.createCheckout.useMutation();
+    api.duesPayment.createCheckout.useMutation();
   const router = useRouter();
 
   const handleCheckout = async () => {
