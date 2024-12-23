@@ -1,6 +1,6 @@
-import { authRouter } from "./router/auth";
-import { memberRouter } from "./router/member";
-import { paymentRouter } from "./router/payment";
+import { authRouter } from "./routers/auth";
+import { memberRouter } from "./routers/member";
+import { paymentRouter } from "./routers/payment";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({

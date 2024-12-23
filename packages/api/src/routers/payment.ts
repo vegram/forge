@@ -1,15 +1,13 @@
 import type { TRPCRouterRecord } from "@trpc/server";
-import Stripe from "stripe";
 
 import { KNIGHTHACKS_MEMBERSHIP_PRICE } from "@forge/consts/knight-hacks";
 
+import { stripe } from "../clients/stripe";
 import { env } from "../env";
 import { protectedProcedure } from "../trpc";
 
 export const paymentRouter = {
   createCheckout: protectedProcedure.mutation(async () => {
-    const stripe = new Stripe(env.STRIPE_SECRET_KEY, { typescript: true });
-
     const baseUrl =
       env.NODE_ENV === "development"
         ? "http://localhost:3000"
