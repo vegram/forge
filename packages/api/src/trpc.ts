@@ -12,42 +12,8 @@ import { ZodError } from "zod";
 
 import type { Session } from "@forge/auth";
 import { auth, validateToken } from "@forge/auth";
-import {
-  DISCORD_ADMIN_ROLE_ID,
-  KNIGHTHACKS_GUILD_ID,
-} from "@forge/consts/knight-hacks";
 
-import { env } from "./env";
-
-interface DiscordMember {
-  avatar: string | null;
-  banner: string | null;
-  communication_disabled_until: string | null;
-  flags: number;
-  joined_at: string;
-  nick: string;
-  pending: boolean;
-  premium_since: string | null;
-  roles: string[];
-  unusual_dm_activity_until: string | null;
-  user: {
-    id: string;
-    username: string;
-    avatar: string | null;
-    discriminator: string;
-    public_flags: number;
-    flags: number;
-    banner: string | null;
-    accent_color: number | null;
-    global_name: string | null;
-    avatar_decoration_data?: string;
-    banner_color: string | null;
-    clan?: string;
-    primary_guild?: string;
-  };
-  mute: boolean;
-  deaf: boolean;
-}
+import { isDiscordAdmin } from "./utils";
 
 /**
  * Isomorphic Session getter for API requests
@@ -147,32 +113,6 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
-const isAdmin = async (user: Session["user"]) => {
-  try {
-    const url = `https://discord.com/api/v10/guilds/${KNIGHTHACKS_GUILD_ID}/members/${user.discordUserId}`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
-      },
-    });
-
-    const data = (await response.json()) as DiscordMember;
-
-    console.log("Member Info:", data);
-
-    if (data.roles.includes(DISCORD_ADMIN_ROLE_ID)) {
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    console.log("err: ", error);
-    return false;
-  }
-};
-
 /**
  * Public (unauthed) procedure
  *
@@ -205,7 +145,7 @@ export const protectedProcedure = t.procedure
   });
 
 export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  const isValidAdmin = await isAdmin(ctx.session.user);
+  const isValidAdmin = await isDiscordAdmin(ctx.session.user);
   if (!isValidAdmin) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }

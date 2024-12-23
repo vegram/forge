@@ -2,9 +2,9 @@ import type { TRPCRouterRecord } from "@trpc/server";
 
 import { KNIGHTHACKS_MEMBERSHIP_PRICE } from "@forge/consts/knight-hacks";
 
-import { stripe } from "../clients/stripe";
 import { env } from "../env";
 import { protectedProcedure } from "../trpc";
+import { stripe } from "../utils/stripe";
 
 export const paymentRouter = {
   createCheckout: protectedProcedure.mutation(async () => {

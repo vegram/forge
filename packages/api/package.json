@@ -20,12 +20,14 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@discordjs/rest": "^2.4.0",
     "@forge/auth": "workspace:*",
     "@forge/consts": "workspace:*",
     "@forge/db": "workspace:*",
     "@forge/validators": "workspace:*",
     "@stripe/stripe-js": "^5.2.0",
     "@trpc/server": "catalog:",
+    "discord-api-types": "^0.37.113",
     "stripe": "^17.4.0",
     "superjson": "2.2.1",
     "zod": "catalog:"
