@@ -18,8 +18,13 @@ export default function PaymentButton() {
     }
   };
   return (
-    <div className="relative top-3">
-      <Button onClick={handleCheckout}>Pay Dues</Button>
-    </div>
+    <main className="container h-screen py-16">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <h1 className="text-5xl text-center font-extrabold tracking-tight sm:text-[5rem]">
+          Become Member
+        </h1>
+        <Button onClick={handleCheckout}>Checkout</Button>
+      </div>
+    </main>
   );
 }
