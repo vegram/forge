@@ -5,7 +5,6 @@ import { Button } from "@forge/ui/button";
 
 import { api } from "~/trpc/react";
 import { DataTable } from "../_components/data-table";
-import { CreateMemberForm } from "./create-member-form";
 
 export default function Members() {
     return (
@@ -14,7 +13,6 @@ export default function Members() {
                 <h1 className="text-5xl text-center font-extrabold tracking-tight sm:text-[5rem]">
                     Member Dashboard
                 </h1>
-                <CreateMemberForm />
             </div>
         </main>
     )
