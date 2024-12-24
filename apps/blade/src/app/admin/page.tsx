@@ -17,7 +17,7 @@ export default async function Admin() {
                     </h1>
                     {session ? 
                         <>
-                            <Link href={"/admin/users"}>User Dashboard</Link>
+                            <Link href={"/admin/members"}>Member Dashboard</Link>
                             <Link href={"/admin/events"}>Event Dashboard</Link>
                         </>
                         : "You are not authenticated to use this service!"
