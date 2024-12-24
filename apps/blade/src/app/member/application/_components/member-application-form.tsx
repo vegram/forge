@@ -67,16 +67,21 @@ export function MemberApplicationForm() {
         .transform((date) => date.toISOString()),
       githubProfileUrl: z
         .string()
+        .regex(/^https:\/\/.+/, "Invalid URL: Please try again with https://")
+        .regex(/^https:\/\/github\.com\/.+/, "Invalid URL: Enter a valid GitHub link")
         .url({ message: "Invalid URL" })
         .optional()
         .or(z.literal("")),
       linkedinProfileUrl: z
         .string()
+        .regex(/^https:\/\/.+/, "Invalid URL: Please try again with https://")
+        .regex(/^https:\/\/w?w?w?\.?linkedin\.com\/.+/, "Invalid URL: Enter a valid LinkedIn link")
         .url({ message: "Invalid URL" })
         .optional()
         .or(z.literal("")),
       websiteUrl: z
         .string()
+        .regex(/^https?:\/\/.+/, "Invalid URL: Please try again with https:// or http://")
         .url({ message: "Invalid URL" })
         .optional()
         .or(z.literal("")),
