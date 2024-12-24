@@ -33,10 +33,8 @@ import {
 
 import { api } from "~/trpc/react";
 import { InsertMemberSchema } from "@forge/db/schemas/knight-hacks";
-import { create } from "domain";
 
 export function CreateMemberForm() {
-    const utils = api.useUtils();
     const createMember = api.member.createMember.useMutation({
         onSuccess() {
             toast.success("Member created successfully!");
@@ -118,13 +116,15 @@ export function CreateMemberForm() {
               control={form.control}
               name="firstName"
               render={({ field }) => (
-                <FormItem className="flex flex-row gap-4">
-                  <FormLabel className="whitespace-nowrap pt-3">
-                    First Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="John" {...field} />
-                  </FormControl>
+                <FormItem>
+                  <div className="flex flex-row gap-4">
+                    <FormLabel className="whitespace-nowrap pt-3">
+                      First Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="John" {...field} />
+                    </FormControl>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -133,13 +133,15 @@ export function CreateMemberForm() {
               control={form.control}
               name="lastName"
               render={({ field }) => (
-                <FormItem className="flex flex-row gap-4">
-                  <FormLabel className="whitespace-nowrap pt-3">
-                    Last Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Doe" {...field} />
-                  </FormControl>
+                <FormItem>
+                  <div className="flex flex-row gap-4">
+                    <FormLabel className="whitespace-nowrap pt-3">
+                      Last Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Doe" {...field} />
+                    </FormControl>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -148,13 +150,15 @@ export function CreateMemberForm() {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Email
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="johndoe@gmail.com" {...field} />
-                </FormControl>
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <Input placeholder="johndoe@gmail.com" {...field} />
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -163,13 +167,15 @@ export function CreateMemberForm() {
             control={form.control}
             name="phoneNumber"
             render={({ field }) => (
-              <FormItem className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Phone Number
-                </FormLabel>
-                <FormControl>
-                  <Input type="tel" placeholder="123-456-7890" {...field} />
-                </FormControl>
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    Phone Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="tel" placeholder="123-456-7890" {...field} />
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -178,13 +184,15 @@ export function CreateMemberForm() {
             control={form.control}
             name="dob"
             render={({ field }) => (
-              <FormItem className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Date Of Birth
-                </FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    Date Of Birth
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} />
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -193,29 +201,31 @@ export function CreateMemberForm() {
             control={form.control}
             name="gender"
             render={({ field }) => (
-              <FormItem className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Gender
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select member's gender" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {GENDERS.map((gender) => (
-                        <SelectItem key={gender} value={gender}>
-                          {gender}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    Gender
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select member's gender" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {GENDERS.map((gender) => (
+                          <SelectItem key={gender} value={gender}>
+                            {gender}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -224,31 +234,66 @@ export function CreateMemberForm() {
             control={form.control}
             name="raceOrEthnicity"
             render={({ field }) => (
-              <FormItem className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Race or Ethnicity
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue 
-                          placeholder="Select member's level of study"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {LEVELS_OF_STUDY.map((levelOfStudy) => (
-                        <SelectItem key={levelOfStudy} value={levelOfStudy}>
-                          {levelOfStudy}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    Race or Ethnicity
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue 
+                            placeholder="Select member's level of study"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {RACES_OR_ETHNICITIES.map((levelOfStudy) => (
+                          <SelectItem key={levelOfStudy} value={levelOfStudy}>
+                            {levelOfStudy}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="levelOfStudy"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    Level of Study
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your level of study" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {LEVELS_OF_STUDY.map((levelOfStudy) => (
+                          <SelectItem key={levelOfStudy} value={levelOfStudy}>
+                            {levelOfStudy}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -257,21 +302,23 @@ export function CreateMemberForm() {
             control={form.control}
             name="school"
             render={({ field }) => (
-              <FormItem className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  School
-                </FormLabel>
-                <FormControl>
-                  <ResponsiveComboBox
-                    items={SCHOOLS}
-                    renderItem={(school => <div>{school}</div>)}
-                    getItemValue={(school) => school}
-                    getItemLabel={(school) => school}
-                    onItemSelect={(school) => field.onChange(school)}
-                    buttonPlaceholder="Select your school"
-                    inputPlaceholder="Search for your school"
-                  />
-                </FormControl>
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    School
+                  </FormLabel>
+                  <FormControl>
+                    <ResponsiveComboBox
+                      items={SCHOOLS}
+                      renderItem={(school => <div>{school}</div>)}
+                      getItemValue={(school) => school}
+                      getItemLabel={(school) => school}
+                      onItemSelect={(school) => field.onChange(school)}
+                      buttonPlaceholder="Select your school"
+                      inputPlaceholder="Search for your school"
+                    />
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -280,29 +327,31 @@ export function CreateMemberForm() {
             control={form.control}
             name="shirtSize"
             render={({ field }) => (
-              <FormItem className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Shirt Size
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your shirt size" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {SHIRT_SIZES.map((size) => (
-                        <SelectItem key={size} value={size}>
-                          {size}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
+              <FormItem>
+                <div className="flex flex-row gap-4">
+                  <FormLabel className="whitespace-nowrap pt-3">
+                    Shirt Size
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your shirt size" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {SHIRT_SIZES.map((size) => (
+                          <SelectItem key={size} value={size}>
+                            {size}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -311,7 +360,7 @@ export function CreateMemberForm() {
             control={form.control}
             name="githubProfileUrl"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <div className="flex flex-row gap-4">
                   <FormLabel className="whitespace-nowrap pt-3">
                     GitHub Profile
@@ -331,7 +380,7 @@ export function CreateMemberForm() {
             control={form.control}
             name="linkedinProfileUrl"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <div className="flex flex-row gap-4">
                   <FormLabel className="whitespace-nowrap pt-3">
                     Linkedin Profile
@@ -351,7 +400,7 @@ export function CreateMemberForm() {
             control={form.control}
             name="websiteUrl"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <div className="flex flex-row gap-4">
                   <FormLabel className="whitespace-nowrap pt-3">
                     Personal Website
