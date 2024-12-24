@@ -58,7 +58,8 @@ export function MemberApplicationForm() {
       email: z.string().email("Invalid email").min(1, "Required"),
       phoneNumber: z
         .string()
-        .regex(/^\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
+        // validates phone number with/without dashes
+        .regex(/^\d{10}|\d{3}-\d{3}-\d{4}$/, "Invalid phone number"),
       // Read from date input as string, convert and validate as date, then transform to ISO string
       dob: z
         .string()
