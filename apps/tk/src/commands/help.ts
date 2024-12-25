@@ -18,28 +18,48 @@ export async function execute(interaction: CommandInteraction) {
     color: 0x33e0ff,
     fields: [
       {
+        name: "/beep",
+        value: "Boop!",
+      },
+      {
+        name: "/bubblewrap",
+        value: "Gives you some bubble wrap!",
+      },
+      {
+        name: "/capybara",
+        value: "Capybara noises!",
+      },
+      {
+        name: "/cat",
+        value: "Meow!",
+      },
+      {
         name: "/chat",
         value: "Chat with the T.K!",
-      },
-      {
-        name: "/countdown",
-        value: "Shows the countdown until Knight Hacks VII",
-      },
-      {
-        name: "/links",
-        value: "Shows our most important links, with lots of information!",
-      },
-      {
-        name: "/sign_in",
-        value: "Signs you in to an event!",
       },
       {
         name: "/check_points",
         value: "Checks your Knight Hacks points!",
       },
       {
-        name: "/leaderboard",
-        value: "Shows the leaderboard privately",
+        name: "/countdown",
+        value: "Shows the countdown until Knight Hacks VII",
+      },
+      {
+        name: "/dog",
+        value: "Bark!",
+      },
+      {
+        name: "/duck",
+        value: "Quack!",
+      },
+      {
+        name: "/eightball",
+        value: "Ask, and you shall receive.",
+      },
+      {
+        name: "/fact",
+        value: "Get a random fact!",
       },
       {
         name: "/flex",
@@ -50,41 +70,33 @@ export async function execute(interaction: CommandInteraction) {
         value: "Sends the flowchart for CS, IT, CpE, and DS!",
       },
       {
-        name: "/joke",
-        value: "Tells a random joke!",
-      },
-      {
-        name: "/beep",
-        value: "Boop!",
-      },
-      {
-        name: "/duck",
-        value: "Quack!",
-      },
-      {
-        name: "/cat",
-        value: "Meow!",
-      },
-      {
-        name: "/dog",
-        value: "Bark!",
-      },
-      {
-        name: "/capybara",
-        value: "Capybara noises!",
+        name: "/fox",
+        value: "What does the fox say?",
       },
       {
         name: "/goat",
         value: "G.O.A.T.!",
       },
       {
-        name: "/bubblewrap",
-        value: "Gives you some bubble wrap!",
-      },
-      {
         name: "/help",
         value: "Shows this list of helpful commands!",
       },
+      {
+        name: "/joke",
+        value: "Tells a random joke!",
+      },
+      {
+        name: "/leaderboard",
+        value: "Shows the leaderboard privately",
+      },
+      {
+        name: "/links",
+        value: "Shows our most important links, with lots of information!",
+      },
+      {
+        name: "/weather",
+        value: "Shows the current weather for a specified city!",
+      }
     ],
   };
 
