@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@forge/ui/table";
+import { CreateEventButton } from "./create-event";
 
 import { api } from "~/trpc/react";
 import { CreateEventButton } from "./create-event";
