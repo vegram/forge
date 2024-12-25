@@ -7,6 +7,7 @@ import { ThemeProvider } from "@forge/ui/theme";
 import { Toaster } from "@forge/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { ThemeToggle } from "@forge/ui/theme";
 
 import "./globals.css";
 
