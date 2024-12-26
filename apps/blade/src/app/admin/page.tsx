@@ -3,8 +3,7 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@forge/auth";
 
-import { isDiscordAdmin } from "../utils";
-import { HydrateClient } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { SIGN_IN_PATH } from "~/consts";
 
 export default async function Admin() {
@@ -13,7 +12,7 @@ export default async function Admin() {
     redirect(SIGN_IN_PATH);
   }
 
-  const isAdmin = await isDiscordAdmin(session.user);
+  const isAdmin = await api.auth.getAdminStatus();
   if (!isAdmin) {
     redirect("/");
   }
