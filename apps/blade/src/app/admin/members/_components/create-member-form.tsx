@@ -209,7 +209,7 @@ export function CreateMemberForm() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select member's gender" />
+                        <SelectValue placeholder="Select gender" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -242,7 +242,7 @@ export function CreateMemberForm() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select member's level of study" />
+                        <SelectValue placeholder="Select race/ethnicity" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -275,7 +275,7 @@ export function CreateMemberForm() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select your level of study" />
+                        <SelectValue placeholder="Select level of study" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -306,8 +306,8 @@ export function CreateMemberForm() {
                     getItemValue={(school) => school}
                     getItemLabel={(school) => school}
                     onItemSelect={(school) => field.onChange(school)}
-                    buttonPlaceholder="Select your school"
-                    inputPlaceholder="Search for your school"
+                    buttonPlaceholder="Select school"
+                    inputPlaceholder="Search for school"
                   />
                 </FormControl>
               </div>
@@ -331,7 +331,7 @@ export function CreateMemberForm() {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select your shirt size" />
+                        <SelectValue placeholder="Select shirt size" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

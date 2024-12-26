@@ -4,6 +4,7 @@ import { auth } from "@forge/auth";
 
 import { SIGN_IN_PATH } from "~/consts";
 import { api, HydrateClient } from "~/trpc/server";
+import { CreateMemberForm } from "./_components/create-member-form";
 import { UpdateMemberForm } from "./_components/update-member-form";
 
 export default async function Members() {
@@ -25,6 +26,7 @@ export default async function Members() {
           <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Member Dashboard
           </h1>
+          <CreateMemberForm />
           <UpdateMemberForm />
         </div>
       </main>
