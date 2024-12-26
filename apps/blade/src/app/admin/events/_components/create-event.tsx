@@ -117,6 +117,7 @@ export function CreateEventButton() {
           <Plus className="mr-2 h-4 w-4" /> Create Event
         </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px]">
         <Form {...form}>
           <form
