@@ -16,6 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from "@forge/ui/table";
+
+import { api } from "~/trpc/react";
 import { CreateEventButton } from "./create-event";
 
 import { api } from "~/trpc/react";
@@ -31,6 +33,8 @@ export function EventsTable() {
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const { data: events } = api.event.getEvents.useQuery();
+  console.log(events);
 
   const { data: events } = api.event.getEvents.useQuery();
 
@@ -93,6 +97,8 @@ export function EventsTable() {
   };
 
   return (
+    // Display a loader while the events are being fetched
+
     <div>
       <div className="flex items-center justify-between gap-10 border-b pb-4">
         <div className="relative w-full">
