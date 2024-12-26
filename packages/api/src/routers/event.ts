@@ -18,7 +18,6 @@ export const eventRouter = {
     .mutation(async ({ input }) => {
       await db.insert(Event).values({
         ...input,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
         points: EVENT_POINTS[input.tag],
       });
     }),
@@ -26,7 +25,7 @@ export const eventRouter = {
     .input(InsertEventSchema)
     .mutation(async ({ input }) => {
       if (!input.id) {
-        throw new Error("Event ID is required to update an event");
+        throw new Error("Event ID is required to update an event!");
       }
       await db.update(Event).set(input).where(eq(Event.id, input.id));
     }),
@@ -34,7 +33,7 @@ export const eventRouter = {
     .input(InsertEventSchema.pick({ id: true }))
     .mutation(async ({ input }) => {
       if (!input.id) {
-        throw new Error("Event ID is required to delete an event");
+        throw new Error("Event ID is required to delete an event!");
       }
       await db.delete(Event).where(eq(Event.id, input.id));
     }),
