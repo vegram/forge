@@ -20,7 +20,6 @@ import {
     FormMessage,
     useForm,
   } from "@forge/ui/form";
-  import { Input } from "@forge/ui/input";
   import { ResponsiveComboBox } from "@forge/ui/responsive-combo-box";
   import {
     Select,
@@ -235,7 +234,7 @@ export function UpdateMemberForm() {
                             <FormLabel className="whitespace-nowrap pt-3">Gender</FormLabel>
                             <FormControl>
                             <ToggleEditInput
-                                placeholder="Select member's gender"
+                                placeholder="Select gender"
                                 type="select"
                                 items={GENDERS}
                                 onValueChange={field.onChange}
@@ -310,8 +309,8 @@ export function UpdateMemberForm() {
                                     getItemValue={(school) => school}
                                     getItemLabel={(school) => school}
                                     onItemSelect={(school) => field.onChange(school)}
-                                    buttonPlaceholder="Select your school"
-                                    inputPlaceholder="Search for your school"
+                                    buttonPlaceholder="Select school"
+                                    inputPlaceholder="Search for school"
                                     isDisabled={schoolToggle}
                                 />
                                 <button
@@ -343,7 +342,7 @@ export function UpdateMemberForm() {
                             </FormLabel>
                             <FormControl>
                             <ToggleEditInput
-                                placeholder="Select your shirt size"
+                                placeholder="Select shirt size"
                                 type="select"
                                 items={SHIRT_SIZES}
                                 onValueChange={field.onChange}
