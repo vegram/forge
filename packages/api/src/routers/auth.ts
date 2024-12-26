@@ -4,6 +4,8 @@ import { invalidateSessionToken } from "@forge/auth";
 
 import { protectedProcedure, publicProcedure } from "../trpc";
 import { isDiscordAdmin } from "../utils";
+import { protectedProcedure, publicProcedure } from "../trpc";
+import { isDiscordAdmin } from "../utils";
 
 export const authRouter = {
   getSession: publicProcedure.query(({ ctx }) => {
