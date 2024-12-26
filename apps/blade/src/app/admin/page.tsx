@@ -1,12 +1,22 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { auth } from "@forge/auth";
 
+import { isDiscordAdmin } from "../utils";
 import { HydrateClient } from "~/trpc/server";
+import { SIGN_IN_PATH } from "~/consts";
 
 export default async function Admin() {
   const session = await auth();
-  // will add admin auth if it becomes a thing
+  if (!session) {
+    redirect(SIGN_IN_PATH);
+  }
+
+  const isAdmin = await isDiscordAdmin(session.user);
+  if (!isAdmin) {
+    redirect("/");
+  }
 
   return (
     <HydrateClient>
@@ -15,14 +25,8 @@ export default async function Admin() {
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Admin
           </h1>
-          {session ? (
-            <>
-              <Link href={"/admin/members"}>Member Dashboard</Link>
-              <Link href={"/admin/events"}>Event Dashboard</Link>
-            </>
-          ) : (
-            "You are not authenticated to use this service!"
-          )}
+          <Link href={"/admin/members"}>Member Dashboard</Link>
+          <Link href={"/admin/events"}>Event Dashboard</Link>
         </div>
       </main>
     </HydrateClient>
