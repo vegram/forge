@@ -72,6 +72,9 @@ export const Member = createTable(
   }),
 );
 
+export type InsertMember = typeof Member.$inferInsert;
+export type SelectMember = typeof Member.$inferSelect;
+
 export const MemberRelations = relations(Member, ({ one }) => ({
   user: one(User, { fields: [Member.userId], references: [User.id] }),
 }));
