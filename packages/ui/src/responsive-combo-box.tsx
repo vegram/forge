@@ -23,6 +23,7 @@ interface ResponsiveComboBoxProps<T> {
   onItemSelect?: (item: T) => void;
   buttonPlaceholder?: string;
   inputPlaceholder?: string;
+  isDisabled?: boolean,
 }
 
 /**
@@ -80,6 +81,7 @@ export function ResponsiveComboBox<T>({
   onItemSelect,
   buttonPlaceholder = "Select item",
   inputPlaceholder = "Filter items...",
+  isDisabled,
 }: ResponsiveComboBoxProps<T>) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -99,6 +101,7 @@ export function ResponsiveComboBox<T>({
           <Button
             variant="outline"
             className="w-full justify-start font-normal"
+            disabled={isDisabled}
           >
             {selectedItem ? (
               <>{getItemLabel(selectedItem)}</>
