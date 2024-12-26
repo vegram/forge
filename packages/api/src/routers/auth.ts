@@ -12,9 +12,9 @@ export const authRouter = {
   getSecretMessage: protectedProcedure.query(() => {
     return "you can see this secret message!";
   }),
-  getAdminStatus: publicProcedure.query(({ ctx }) => {
+  getAdminStatus: publicProcedure.query(({ ctx }): Promise<boolean> => {
     if (!ctx.session) {
-      return false;
+      return Promise.resolve(false); // consistent return type
     }
 
     return isDiscordAdmin(ctx.session.user);
