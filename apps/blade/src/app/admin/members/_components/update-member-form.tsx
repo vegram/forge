@@ -34,12 +34,14 @@ import {
   import { Pencil, Check } from "lucide-react";
   import { useState } from "react";
   import { cn } from "@forge/ui";
-  import EditableInput from "../../_components/EditableInput";
+  import ToggleEditInput from "../../_components/ToggleEditInput";
   
   import { api } from "~/trpc/react";
 
 //   export function UpdateMemberForm({ member }: { member: InsertMember }) {
 export function UpdateMemberForm() {
+    const [schoolToggle, setSchoolToggle] = useState<boolean>(true);
+
     const updateMember = api.member.updateMember.useMutation({
         onSuccess() {
             toast.success("Member updated successfully!");
@@ -135,7 +137,7 @@ export function UpdateMemberForm() {
                                     First Name
                                 </FormLabel>
                                 <FormControl>
-                                    <EditableInput 
+                                    <ToggleEditInput 
                                         placeholder="John"
                                         {...field}
                                     />
@@ -155,7 +157,7 @@ export function UpdateMemberForm() {
                                     Last Name
                                 </FormLabel>
                                 <FormControl>
-                                    <EditableInput
+                                    <ToggleEditInput
                                         placeholder="Doe"
                                         {...field}
                                     />
@@ -174,7 +176,7 @@ export function UpdateMemberForm() {
                         <div className="flex flex-row gap-4">
                             <FormLabel className="whitespace-nowrap pt-3">Email</FormLabel>
                             <FormControl>
-                                <EditableInput
+                                <ToggleEditInput
                                     placeholder="johndoe@gmail.com"
                                     {...field}
                                 />
@@ -194,7 +196,7 @@ export function UpdateMemberForm() {
                             Phone Number
                             </FormLabel>
                             <FormControl>
-                                <EditableInput
+                                <ToggleEditInput
                                     placeholder="123-456-7890"
                                     {...field}
                                 />
@@ -214,7 +216,7 @@ export function UpdateMemberForm() {
                             Date Of Birth
                             </FormLabel>
                             <FormControl>
-                                <EditableInput
+                                <ToggleEditInput
                                     type="date"
                                     {...field}
                                 />
@@ -232,23 +234,13 @@ export function UpdateMemberForm() {
                         <div className="flex flex-row gap-4">
                             <FormLabel className="whitespace-nowrap pt-3">Gender</FormLabel>
                             <FormControl>
-                            <Select
+                            <ToggleEditInput
+                                placeholder="Select member's gender"
+                                type="select"
+                                items={GENDERS}
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
-                            >
-                                <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select member's gender" />
-                                </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                {GENDERS.map((gender) => (
-                                    <SelectItem key={gender} value={gender}>
-                                    {gender}
-                                    </SelectItem>
-                                ))}
-                                </SelectContent>
-                            </Select>
+                            />
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -265,23 +257,13 @@ export function UpdateMemberForm() {
                             Race or Ethnicity
                             </FormLabel>
                             <FormControl>
-                            <Select
+                            <ToggleEditInput
+                                placeholder="Select race/ethnicity"
+                                type="select"
+                                items={RACES_OR_ETHNICITIES}
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
-                            >
-                                <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select member's level of study" />
-                                </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                {RACES_OR_ETHNICITIES.map((levelOfStudy) => (
-                                    <SelectItem key={levelOfStudy} value={levelOfStudy}>
-                                    {levelOfStudy}
-                                    </SelectItem>
-                                ))}
-                                </SelectContent>
-                            </Select>
+                            />
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -298,23 +280,13 @@ export function UpdateMemberForm() {
                             Level of Study
                             </FormLabel>
                             <FormControl>
-                            <Select
+                            <ToggleEditInput
+                                placeholder="Select level of study"
+                                type="select"
+                                items={LEVELS_OF_STUDY}
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
-                            >
-                                <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select your level of study" />
-                                </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                {LEVELS_OF_STUDY.map((levelOfStudy) => (
-                                    <SelectItem key={levelOfStudy} value={levelOfStudy}>
-                                    {levelOfStudy}
-                                    </SelectItem>
-                                ))}
-                                </SelectContent>
-                            </Select>
+                            />
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -329,15 +301,31 @@ export function UpdateMemberForm() {
                         <div className="flex flex-row gap-4">
                             <FormLabel className="whitespace-nowrap pt-3">School</FormLabel>
                             <FormControl>
-                            <ResponsiveComboBox
-                                items={SCHOOLS}
-                                renderItem={(school) => <div>{school}</div>}
-                                getItemValue={(school) => school}
-                                getItemLabel={(school) => school}
-                                onItemSelect={(school) => field.onChange(school)}
-                                buttonPlaceholder="Select your school"
-                                inputPlaceholder="Search for your school"
-                            />
+                            <div className={cn("flex flex-row relative",
+                                "w-full items-center justify-end"
+                            )}>
+                                <ResponsiveComboBox
+                                    items={SCHOOLS}
+                                    renderItem={(school) => <div>{school}</div>}
+                                    getItemValue={(school) => school}
+                                    getItemLabel={(school) => school}
+                                    onItemSelect={(school) => field.onChange(school)}
+                                    buttonPlaceholder="Select your school"
+                                    inputPlaceholder="Search for your school"
+                                    isDisabled={schoolToggle}
+                                />
+                                <button
+                                    type="submit"
+                                    className="absolute right-4"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setSchoolToggle(!schoolToggle);
+                                    }}
+                                >
+                                    {schoolToggle && <Pencil size={16} />}
+                                    {!schoolToggle && <Check size={18} />}
+                                </button>
+                            </div>
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -354,23 +342,13 @@ export function UpdateMemberForm() {
                             Shirt Size
                             </FormLabel>
                             <FormControl>
-                            <Select
+                            <ToggleEditInput
+                                placeholder="Select your shirt size"
+                                type="select"
+                                items={SHIRT_SIZES}
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
-                            >
-                                <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select your shirt size" />
-                                </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                {SHIRT_SIZES.map((size) => (
-                                    <SelectItem key={size} value={size}>
-                                    {size}
-                                    </SelectItem>
-                                ))}
-                                </SelectContent>
-                            </Select>
+                            />
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -387,7 +365,7 @@ export function UpdateMemberForm() {
                             GitHub Profile
                             </FormLabel>
                             <FormControl>
-                            <Input
+                            <ToggleEditInput
                                 placeholder="https://github.com/knighthacks"
                                 {...field}
                             />
@@ -407,7 +385,7 @@ export function UpdateMemberForm() {
                             Linkedin Profile
                             </FormLabel>
                             <FormControl>
-                            <Input
+                            <ToggleEditInput
                                 placeholder="https://www.linkedin.com/company/knight-hacks"
                                 {...field}
                             />
@@ -427,9 +405,9 @@ export function UpdateMemberForm() {
                             Personal Website
                             </FormLabel>
                             <FormControl>
-                                <Input
-                                    placeholder="https://knighthacks.org" 
-                                    {...field} 
+                                <ToggleEditInput 
+                                    placeholder="https://knighthacks.org"
+                                    {...field}
                                 />
                             </FormControl>
                         </div>
