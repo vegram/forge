@@ -65,13 +65,6 @@ export const memberRouter = {
       await db.delete(Member).where(eq(Member.id, input.id));
     }),
 
-  deleteMember: protectedProcedure
-    .input(InsertMemberSchema.pick({ id: true }))
-    .mutation(async ({ input }) => {
-      if (!input.id) throw new Error("ID is required to delete a member");
-      await db.delete(Member).where(eq(Member.id, input.id));
-    }),
-
   getMember: protectedProcedure.query(async ({ ctx }) => {
     const member = await db
       .select()
