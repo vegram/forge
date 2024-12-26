@@ -31,7 +31,12 @@ export function EventsTable() {
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  // 3) The TRPC query should return an array of Event
+  //    e.g., your procedure might do: return db.select().from(Event)....
+  //    plus "numAttended" if you have a join or subquery
   const { data: events } = api.event.getEvents.useQuery();
+
   console.log(events);
 
   const { data: events } = api.event.getEvents.useQuery();
@@ -54,8 +59,6 @@ export function EventsTable() {
   });
 
   return (
-    // Display a loader while the events are being fetched
-
     <div>
       <div className="flex items-center justify-between gap-2 border-b pb-4">
         <div className="relative w-full">
