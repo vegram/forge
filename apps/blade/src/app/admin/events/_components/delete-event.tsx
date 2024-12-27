@@ -103,7 +103,7 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
           <Button
             variant="destructive"
             disabled={
-              USE_CAUTION
+              USE_CAUTION as boolean
                 ? confirmationText !== "I am absolutely sure" || isLoading
                 : isLoading
             }
