@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, Trash2 } from "lucide-react";
 
+import { USE_CAUTION } from "@forge/consts/knight-hacks";
 import { Button } from "@forge/ui/button";
 import {
   Dialog,
@@ -18,8 +19,6 @@ import { toast } from "@forge/ui/toast";
 
 import { api } from "~/trpc/react";
 
-// eslint-disable-next-line prefer-const
-let extraCaution = true;
 interface DeleteEventButtonProps {
   event: {
     id: string;
@@ -104,7 +103,7 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
           <Button
             variant="destructive"
             disabled={
-              extraCaution
+              USE_CAUTION
                 ? confirmationText !== "I am absolutely sure" || isLoading
                 : isLoading
             }

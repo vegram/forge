@@ -7,6 +7,7 @@ import Stripe from "stripe";
 import type { Session } from "@forge/auth";
 import {
   DISCORD_ADMIN_ROLE_ID,
+  GOOGLE_PERSONIFY_EMAIL,
   KNIGHTHACKS_GUILD_ID,
 } from "@forge/consts/knight-hacks";
 
@@ -30,7 +31,7 @@ const auth = new google.auth.JWT(
   undefined,
   env.GOOGLE_PRIVATE_KEY,
   ["https://www.googleapis.com/auth/calendar"],
-  "dylan@knighthacks.org",
+  GOOGLE_PERSONIFY_EMAIL as string,
 );
 
 export const calendar = google.calendar({

@@ -98,7 +98,7 @@ export const eventRouter = {
         }
 
         throw new TRPCError({
-          message: "Failed to create event in Google Calendar ",
+          message: "Failed to create event in Google Calendar",
           code: "BAD_REQUEST",
         });
       }

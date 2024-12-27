@@ -21,6 +21,7 @@ export const EVENT_TAGS = [
   "Sponsorship",
   "Tech Exploration",
   "Class Support",
+  "Workshop",
   "OPS",
   "Hackathon",
 ] as const;
@@ -36,6 +37,7 @@ export const EVENT_POINTS: Record<EventTag, number> = {
   Sponsorship: 40,
   "Tech Exploration": 25,
   "Class Support": 25,
+  Workshop: 25,
   OPS: 20,
   Hackathon: 1,
 } as const;
@@ -58,6 +60,10 @@ export const DISCORD_EVENT_PRIVACY_LEVEL = 2;
 // DEV: c_178118a9a25d9f278014b123b79b7e9caf9b29ac94bba3934237db00979e0f75@group.calendar.google.com
 export const GOOGLE_CALENDAR_ID =
   "c_0b9df2b0062a5d711fc16060ff3286ef404b174bfafc4cbdd4e3009e91536e94@group.calendar.google.com";
+
+export const GOOGLE_PERSONIFY_EMAIL = "dylan@knighthacks.org";
+
+export const USE_CAUTION = true;
 
 export const GENDERS = [
   "Man",
