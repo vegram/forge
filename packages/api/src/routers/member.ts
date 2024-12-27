@@ -91,4 +91,8 @@ export const memberRouter = {
     const eventObjects = eventsToMember.map((item) => item.event);
     return eventObjects;
   }),
+
+  getMembers: protectedProcedure.query(async () => {
+    return db.query.Member.findMany();
+  })
 } satisfies TRPCRouterRecord;

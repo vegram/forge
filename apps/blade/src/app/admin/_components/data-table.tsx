@@ -31,21 +31,22 @@ import {
   TableHeader,
   TableRow,
 } from "@forge/ui/table";
+import { api } from "~/trpc/react";
 
 interface DataTableProps<Data, Value> {
   columns: ColumnDef<Data, Value>[];
-  data: Data[];
 }
 
 export function DataTable<Data, Value>({
   columns,
-  data,
 }: DataTableProps<Data, Value>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
+  const { data: members = [] } = api.member.getMembers.useQuery();
+
   const table = useReactTable({
-    data,
+    data: members,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,

@@ -37,8 +37,8 @@ import {
   
   import { api } from "~/trpc/react";
 
-//   export function UpdateMemberForm({ member }: { member: InsertMember }) {
-export function UpdateMemberForm() {
+  export function UpdateMemberForm({ member, className }: 
+    { member: InsertMember, className: string }) {
     const [schoolToggle, setSchoolToggle] = useState<boolean>(true);
 
     const updateMember = api.member.updateMember.useMutation({
@@ -52,7 +52,7 @@ export function UpdateMemberForm() {
     const form = useForm({
         schema: InsertMemberSchema.extend({
             // userId will be derived from the user's session on the server
-            userId: z.undefined(),
+            userId: member.id ? member.id : "",
             firstName: z.string().min(1, "Required"),
             lastName: z.string().min(1, "Required"),
             // Age will be derived from dob on the server
@@ -106,14 +106,14 @@ export function UpdateMemberForm() {
             // githubProfileUrl: member.githubProfileUrl ? member.githubProfileUrl : "",
             // linkedinProfileUrl: member.linkedinProfileUrl? member.linkedinProfileUrl : "",
             // websiteUrl: member.websiteUrl ? member.websiteUrl : "",
-            firstName: "",
-            lastName: "",
-            email: "",
-            phoneNumber: "",
-            dob: "",
-            githubProfileUrl: "",
-            linkedinProfileUrl: "",
-            websiteUrl: "",
+            firstName: member.firstName,
+            lastName: member.lastName,
+            email: member.email,
+            phoneNumber: member.phoneNumber,
+            dob: member.dob,
+            githubProfileUrl: member.githubProfileUrl,
+            linkedinProfileUrl: member.linkedinProfileUrl,
+            websiteUrl: member.websiteUrl,
         }
     });
 
@@ -123,7 +123,7 @@ export function UpdateMemberForm() {
                 onSubmit={form.handleSubmit((data) => {
                     updateMember.mutate(data);
                 })}
-                className="flex flex-col justify-center space-y-6 pb-40"
+                className={cn("flex flex-col justify-center space-y-6 pb-40", className)}
             >
                 <h1 className="text-center text-2xl font-bold">Update User</h1>
                 <FormField
