@@ -126,7 +126,7 @@ export const HackathonSponsor = createTable("hackathon_sponsor", (t) => ({
 export const Event = createTable("event", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   discordId: t.varchar({ length: 255 }).notNull(),
-  googleId: t.varchar({ length: 255 }),
+  googleId: t.varchar({ length: 255 }).notNull(),
   name: t.varchar({ length: 255 }).notNull(),
   tag: eventTagEnum().notNull(),
   description: t.text().notNull(),

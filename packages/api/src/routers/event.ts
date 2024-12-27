@@ -2,7 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import type { APIExternalGuildScheduledEvent } from "discord-api-types/v10";
 import { TRPCError } from "@trpc/server";
 import { Routes } from "discord-api-types/v10";
-import { calendar_v3 } from "googleapis";
+import type { calendar_v3 } from "googleapis";
 
 import {
   DISCORD_EVENT_PRIVACY_LEVEL,
