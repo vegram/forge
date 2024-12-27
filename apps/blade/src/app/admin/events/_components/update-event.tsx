@@ -60,6 +60,7 @@ const UpdateFormSchema = InsertEventSchema.omit({
   start_datetime: true,
   end_datetime: true,
   discordId: true,
+  googleId: true,
 }).extend({
   date: z.string(),
   startHour: z.string(),
@@ -202,6 +203,7 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
     updateEvent.mutate({
       id: event.id,
       discordId: event.discordId,
+      googleId: event.googleId,
       name: values.name,
       description: values.description,
       location: values.location,

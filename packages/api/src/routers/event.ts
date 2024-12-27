@@ -7,6 +7,7 @@ import {
   DISCORD_EVENT_PRIVACY_LEVEL,
   DISCORD_EVENT_TYPE,
   EVENT_POINTS,
+  GOOGLE_CALENDAR_ID,
   KNIGHTHACKS_GUILD_ID,
 } from "@forge/consts/knight-hacks";
 import { desc, eq } from "@forge/db";
@@ -14,7 +15,7 @@ import { db } from "@forge/db/client";
 import { Event, InsertEventSchema } from "@forge/db/schemas/knight-hacks";
 
 import { adminProcedure } from "../trpc";
-import { discord } from "../utils";
+import { calendar, discord } from "../utils";
 
 export const eventRouter = {
   getEvents: adminProcedure.query(async () => {
@@ -23,18 +24,21 @@ export const eventRouter = {
     });
   }),
   createEvent: adminProcedure
-    .input(InsertEventSchema.omit({ id: true, discordId: true }))
+    .input(
+      InsertEventSchema.omit({ id: true, discordId: true, googleId: true }),
+    )
     .mutation(async ({ input }) => {
-      // Step 1: Make the event in Discord
-      let eventId;
-      try {
-        const startDatetime = new Date(input.start_datetime);
-        const startIsoTimestamp = startDatetime.toISOString();
-        const endDatetime = new Date(input.end_datetime);
-        const endIsoTimestamp = endDatetime.toISOString();
-        const formattedName =
-          "[" + input.tag.toUpperCase().replace(" ", "-") + "] " + input.name;
+      // Step 0: Declare consts
+      const startDatetime = new Date(input.start_datetime);
+      const startIsoTimestamp = startDatetime.toISOString();
+      const endDatetime = new Date(input.end_datetime);
+      const endIsoTimestamp = endDatetime.toISOString();
+      const formattedName =
+        "[" + input.tag.toUpperCase().replace(" ", "-") + "] " + input.name;
 
+      // Step 1: Make the event in Discord
+      let discordEventId;
+      try {
         const response = (await discord.post(
           Routes.guildScheduledEvents(KNIGHTHACKS_GUILD_ID),
           {
@@ -51,8 +55,7 @@ export const eventRouter = {
             },
           },
         )) as APIExternalGuildScheduledEvent;
-        eventId = response.id;
-        console.log(JSON.stringify(response, null, 2));
+        discordEventId = response.id;
       } catch (error) {
         console.error(JSON.stringify(error, null, 2));
         throw new TRPCError({
@@ -61,19 +64,99 @@ export const eventRouter = {
         });
       }
 
-      // Step 2: Insert the event into the database with the discord id.
-      if (!eventId) {
+      // Step 2: Insert the event into the Google Calendar
+      let googleEventId;
+      try {
+        interface CalendarEvent {
+          data: {
+            id: string;
+          };
+        }
+
+        const response = (await calendar.events.insert({
+          calendarId: GOOGLE_CALENDAR_ID as string,
+          requestBody: {
+            end: {
+              dateTime: input.end_datetime,
+              timeZone: "America/New_York",
+            },
+            start: {
+              dateTime: input.start_datetime,
+              timeZone: "America/New_York",
+            },
+            description: input.description,
+            summary: formattedName,
+            location: input.location,
+          },
+        })) as unknown as CalendarEvent;
+        googleEventId = response.data.id;
+      } catch (error) {
+        console.error("ERROR MESSAGE:", JSON.stringify(error, null, 2));
+
+        // Clean up the event in Discord if the Google Calendar event fails
+        try {
+          await discord.delete(
+            Routes.guildScheduledEvent(KNIGHTHACKS_GUILD_ID, discordEventId),
+          );
+        } catch (error) {
+          console.error(JSON.stringify(error, null, 2));
+        }
+
+        throw new TRPCError({
+          message: "Failed to create event in Google Calendar ",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      // Step 3: Insert the event into the database with the discord id.
+      if (!discordEventId) {
         throw new TRPCError({
           message: "Failed to create event in Discord",
           code: "BAD_REQUEST",
         });
       }
 
-      await db.insert(Event).values({
-        ...input,
-        points: EVENT_POINTS[input.tag] || 0,
-        discordId: eventId,
-      });
+      if (!googleEventId) {
+        throw new TRPCError({
+          message: "Failed to create event in Google Calendar (no google ID)",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      try {
+        await db.insert(Event).values({
+          ...input,
+          points: EVENT_POINTS[input.tag] || 0,
+          discordId: discordEventId,
+          googleId: googleEventId,
+        });
+      } catch (error) {
+        console.error(JSON.stringify(error, null, 2));
+
+        // Clean up the event in Discord if the database insert fails
+        try {
+          await discord.delete(
+            Routes.guildScheduledEvent(KNIGHTHACKS_GUILD_ID, discordEventId),
+          );
+        } catch (error) {
+          console.error(JSON.stringify(error, null, 2));
+        }
+
+        // Clean up the event in Google Calendar if the database insert fails
+        try {
+          await calendar.events.delete({
+            calendarId: GOOGLE_CALENDAR_ID as string,
+            eventId: googleEventId,
+          });
+        } catch (error) {
+          console.error(JSON.stringify(error, null, 2));
+        }
+
+        throw new TRPCError({
+          message: "Failed to create event in the database",
+          code: "BAD_REQUEST",
+        });
+      }
     }),
   updateEvent: adminProcedure
     .input(InsertEventSchema)
@@ -85,10 +168,16 @@ export const eventRouter = {
         });
       }
 
+      // Step 0: Declare consts
+      const startDatetime = new Date(input.start_datetime);
+      const startIsoTimestamp = startDatetime.toISOString();
+      const endDatetime = new Date(input.end_datetime);
+      const endIsoTimestamp = endDatetime.toISOString();
+      const formattedName =
+        "[" + input.tag.toUpperCase().replace(" ", "-") + "] " + input.name;
+
       // Step 1: Update the event in Discord
       try {
-        const formattedName =
-          "[" + input.tag.toUpperCase().replace(" ", "-") + "] " + input.name;
         await discord.patch(
           Routes.guildScheduledEvent(KNIGHTHACKS_GUILD_ID, input.discordId),
           {
@@ -96,10 +185,8 @@ export const eventRouter = {
               description: input.description,
               name: formattedName,
               privacy_level: DISCORD_EVENT_PRIVACY_LEVEL,
-              scheduled_start_time: new Date(
-                input.start_datetime,
-              ).toISOString(),
-              scheduled_end_time: new Date(input.end_datetime).toISOString(),
+              scheduled_start_time: startIsoTimestamp,
+              scheduled_end_time: endIsoTimestamp,
               entity_type: DISCORD_EVENT_TYPE,
               entity_metadata: {
                 location: input.location,
@@ -115,11 +202,40 @@ export const eventRouter = {
         });
       }
 
-      // Step 2: Update the event in the database
+      // Step 2: Update the event in the Google Calendar
+      try {
+        await calendar.events.update({
+          calendarId: GOOGLE_CALENDAR_ID as string,
+          eventId: input.googleId,
+          requestBody: {
+            end: {
+              dateTime: input.end_datetime,
+              timeZone: "America/New_York",
+            },
+            start: {
+              dateTime: input.start_datetime,
+              timeZone: "America/New_York",
+            },
+            description: input.description,
+            summary: formattedName,
+            location: input.location,
+          },
+        });
+      } catch (error) {
+        console.error(JSON.stringify(error, null, 2));
+        throw new TRPCError({
+          message: "Failed to update event in Google Calendar",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      // Step 3: Update the event in the database
       await db.update(Event).set(input).where(eq(Event.id, input.id));
     }),
   deleteEvent: adminProcedure
-    .input(InsertEventSchema.pick({ id: true, discordId: true }))
+    .input(
+      InsertEventSchema.pick({ id: true, discordId: true, googleId: true }),
+    )
     .mutation(async ({ input }) => {
       if (!input.id) {
         throw new TRPCError({
@@ -141,7 +257,21 @@ export const eventRouter = {
         });
       }
 
-      // Step 2: Delete the event in the database
+      // Step 2: Delete the event in the Google Calendar
+      try {
+        await calendar.events.delete({
+          calendarId: GOOGLE_CALENDAR_ID as string,
+          eventId: input.googleId,
+        });
+      } catch (error) {
+        console.error(JSON.stringify(error, null, 2));
+        throw new TRPCError({
+          message: "Failed to delete event in Google Calendar",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      // Step 3: Delete the event in the database
       await db.delete(Event).where(eq(Event.id, input.id));
     }),
 } satisfies TRPCRouterRecord;

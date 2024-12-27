@@ -19,11 +19,12 @@ import { toast } from "@forge/ui/toast";
 import { api } from "~/trpc/react";
 
 // eslint-disable-next-line prefer-const
-let extraCaution = true;
+let extraCaution = false;
 interface DeleteEventButtonProps {
   event: {
     id: string;
     discordId: string;
+    googleId: string;
     name: string;
   };
 }
@@ -54,7 +55,11 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
 
   const handleDelete = () => {
     setIsLoading(true);
-    deleteEvent.mutate({ id: event.id, discordId: event.discordId });
+    deleteEvent.mutate({
+      id: event.id,
+      discordId: event.discordId,
+      googleId: event.googleId,
+    });
   };
 
   return (

@@ -83,6 +83,7 @@ export function CreateEventButton() {
     start_datetime: true,
     end_datetime: true,
     discordId: true,
+    googleId: true,
   }).extend({
     date: z.string(),
     startHour: z.string(),

@@ -5,6 +5,8 @@ export const env = createEnv({
   server: {
     STRIPE_SECRET_KEY: z.string(),
     DISCORD_BOT_TOKEN: z.string(),
+    GOOGLE_CLIENT_EMAIL: z.string(),
+    GOOGLE_PRIVATE_KEY: z.string(),
     NODE_ENV: z.enum(["development", "production"]).optional(),
   },
   experimental__runtimeEnv: {},

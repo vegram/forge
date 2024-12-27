@@ -50,6 +50,9 @@ export const DISCORD_EVENT_TYPE = 3;
 
 export const DISCORD_EVENT_PRIVACY_LEVEL = 2;
 
+export const GOOGLE_CALENDAR_ID =
+  "c_178118a9a25d9f278014b123b79b7e9caf9b29ac94bba3934237db00979e0f75@group.calendar.google.com";
+
 export const GENDERS = [
   "Man",
   "Woman",
