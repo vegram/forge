@@ -2,6 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import type { APIExternalGuildScheduledEvent } from "discord-api-types/v10";
 import { TRPCError } from "@trpc/server";
 import { Routes } from "discord-api-types/v10";
+import { calendar_v3 } from "googleapis";
 
 import {
   DISCORD_EVENT_PRIVACY_LEVEL,
@@ -67,28 +68,22 @@ export const eventRouter = {
       // Step 2: Insert the event into the Google Calendar
       let googleEventId;
       try {
-        interface CalendarEvent {
-          data: {
-            id: string;
-          };
-        }
-
-        const response = (await calendar.events.insert({
+        const response = await calendar.events.insert({
           calendarId: GOOGLE_CALENDAR_ID as string,
           requestBody: {
             end: {
-              dateTime: input.end_datetime,
+              dateTime: endIsoTimestamp,
               timeZone: "America/New_York",
             },
             start: {
-              dateTime: input.start_datetime,
+              dateTime: startIsoTimestamp,
               timeZone: "America/New_York",
             },
             description: input.description,
             summary: formattedName,
             location: input.location,
           },
-        })) as unknown as CalendarEvent;
+        } as calendar_v3.Params$Resource$Events$Insert);
         googleEventId = response.data.id;
       } catch (error) {
         console.error("ERROR MESSAGE:", JSON.stringify(error, null, 2));
@@ -209,18 +204,18 @@ export const eventRouter = {
           eventId: input.googleId,
           requestBody: {
             end: {
-              dateTime: input.end_datetime,
+              dateTime: endIsoTimestamp,
               timeZone: "America/New_York",
             },
             start: {
-              dateTime: input.start_datetime,
+              dateTime: startIsoTimestamp,
               timeZone: "America/New_York",
             },
             description: input.description,
             summary: formattedName,
             location: input.location,
           },
-        });
+        } as calendar_v3.Params$Resource$Events$Update);
       } catch (error) {
         console.error(JSON.stringify(error, null, 2));
         throw new TRPCError({
@@ -262,7 +257,7 @@ export const eventRouter = {
         await calendar.events.delete({
           calendarId: GOOGLE_CALENDAR_ID as string,
           eventId: input.googleId,
-        });
+        } as calendar_v3.Params$Resource$Events$Delete);
       } catch (error) {
         console.error(JSON.stringify(error, null, 2));
         throw new TRPCError({
