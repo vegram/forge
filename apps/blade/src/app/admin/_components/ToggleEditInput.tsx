@@ -35,6 +35,8 @@ export default function ToggleEditInput(
                         placeholder={placeholder} 
                         {...field} 
                         disabled={toggle}
+                        onSubmit={() => setToggle(false)}
+                        maxLength={256}
                     />
                     <button
                         type="submit"

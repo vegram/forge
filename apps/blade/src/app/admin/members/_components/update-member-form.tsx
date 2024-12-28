@@ -4,12 +4,10 @@ import { z } from "zod";
 
 import {
     GENDERS,
-    LEVELS_OF_STUDY,
-    RACES_OR_ETHNICITIES,
     SCHOOLS,
     SHIRT_SIZES,
   } from "@forge/consts/knight-hacks";
-  import { InsertMemberSchema } from "@forge/db/schemas/knight-hacks";
+  import { InsertMemberSchema, shirtSizeEnum } from "@forge/db/schemas/knight-hacks";
   import { Button } from "@forge/ui/button";
   import {
     Form,
@@ -21,13 +19,6 @@ import {
     useForm,
   } from "@forge/ui/form";
   import { ResponsiveComboBox } from "@forge/ui/responsive-combo-box";
-  import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@forge/ui/select";
   import { toast } from "@forge/ui/toast";
   import type { InsertMember } from "@forge/db/schemas/knight-hacks";
   import { Pencil, Check } from "lucide-react";
@@ -38,21 +29,25 @@ import {
   import { api } from "~/trpc/react";
 
   export function UpdateMemberForm({ member, className }: 
-    { member: InsertMember, className: string }) {
+    { member: InsertMember, className?: string }) {
     const [schoolToggle, setSchoolToggle] = useState<boolean>(true);
 
-    const updateMember = api.member.updateMember.useMutation({
+    const utils = api.useUtils();
+    const updateMember = api.member.adminUpdateMember.useMutation({
         onSuccess() {
             toast.success("Member updated successfully!");
         },
         onError() {
             toast.error("Oops! Something went wrong. Please try again later.");
         },
+        async onSettled() {
+            await utils.member.invalidate();
+        }
     });
     const form = useForm({
         schema: InsertMemberSchema.extend({
             // userId will be derived from the user's session on the server
-            userId: member.id ? member.id : "",
+            id: z.string().uuid().nonempty(),
             firstName: z.string().min(1, "Required"),
             lastName: z.string().min(1, "Required"),
             // Age will be derived from dob on the server
@@ -66,54 +61,18 @@ import {
             dob: z
                 .string()
                 .pipe(z.coerce.date())
-                .transform((date) => date.toISOString()),
-            githubProfileUrl: z
-                .string()
-                .regex(/^https:\/\/.+/, "Invalid URL: Please try again with https://")
-                .regex(
-                /^https:\/\/github\.com\/.+/,
-                "Invalid URL: Enter a valid GitHub link",
-                )
-                .url({ message: "Invalid URL" })
-                .optional()
-                .or(z.literal("")),
-            linkedinProfileUrl: z
-                .string()
-                .regex(/^https:\/\/.+/, "Invalid URL: Please try again with https://")
-                .regex(
-                /^https:\/\/w?w?w?\.?linkedin\.com\/.+/,
-                "Invalid URL: Enter a valid LinkedIn link",
-                )
-                .url({ message: "Invalid URL" })
-                .optional()
-                .or(z.literal("")),
-            websiteUrl: z
-                .string()
-                .regex(
-                /^https?:\/\/.+/,
-                "Invalid URL: Please try again with https:// or http://",
-                )
-                .url({ message: "Invalid URL" })
-                .optional()
-                .or(z.literal("")),  
+                .transform((date) => date.toISOString()), 
         }),
         defaultValues: {
-            // firstName: member.firstName,
-            // lastName: member.lastName,
-            // email: member.email,
-            // phoneNumber: member.phoneNumber,
-            // dob: member.dob,
-            // githubProfileUrl: member.githubProfileUrl ? member.githubProfileUrl : "",
-            // linkedinProfileUrl: member.linkedinProfileUrl? member.linkedinProfileUrl : "",
-            // websiteUrl: member.websiteUrl ? member.websiteUrl : "",
+            id: member.id,
             firstName: member.firstName,
             lastName: member.lastName,
             email: member.email,
             phoneNumber: member.phoneNumber,
             dob: member.dob,
-            githubProfileUrl: member.githubProfileUrl,
-            linkedinProfileUrl: member.linkedinProfileUrl,
-            websiteUrl: member.websiteUrl,
+            gender: member.gender,
+            school: member.school,
+            shirtSize: member.shirtSize,
         }
     });
 
@@ -121,7 +80,9 @@ import {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit((data) => {
-                    updateMember.mutate(data);
+                    updateMember.mutate({
+                        ...data
+                    });
                 })}
                 className={cn("flex flex-col justify-center space-y-6 pb-40", className)}
             >
@@ -248,52 +209,6 @@ import {
                     />
                     <FormField
                     control={form.control}
-                    name="raceOrEthnicity"
-                    render={({ field }) => (
-                        <FormItem>
-                        <div className="flex flex-row gap-4">
-                            <FormLabel className="whitespace-nowrap pt-3">
-                            Race or Ethnicity
-                            </FormLabel>
-                            <FormControl>
-                            <ToggleEditInput
-                                placeholder="Select race/ethnicity"
-                                type="select"
-                                items={RACES_OR_ETHNICITIES}
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                            />
-                            </FormControl>
-                        </div>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="levelOfStudy"
-                    render={({ field }) => (
-                        <FormItem>
-                        <div className="flex flex-row gap-4">
-                            <FormLabel className="whitespace-nowrap pt-3">
-                            Level of Study
-                            </FormLabel>
-                            <FormControl>
-                            <ToggleEditInput
-                                placeholder="Select level of study"
-                                type="select"
-                                items={LEVELS_OF_STUDY}
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                            />
-                            </FormControl>
-                        </div>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
                     name="school"
                     render={({ field }) => (
                         <FormItem>
@@ -348,66 +263,6 @@ import {
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
                             />
-                            </FormControl>
-                        </div>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="githubProfileUrl"
-                    render={({ field }) => (
-                        <FormItem>
-                        <div className="flex flex-row gap-4">
-                            <FormLabel className="whitespace-nowrap pt-3">
-                            GitHub Profile
-                            </FormLabel>
-                            <FormControl>
-                            <ToggleEditInput
-                                placeholder="https://github.com/knighthacks"
-                                {...field}
-                            />
-                            </FormControl>
-                        </div>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="linkedinProfileUrl"
-                    render={({ field }) => (
-                        <FormItem>
-                        <div className="flex flex-row gap-4">
-                            <FormLabel className="whitespace-nowrap pt-3">
-                            Linkedin Profile
-                            </FormLabel>
-                            <FormControl>
-                            <ToggleEditInput
-                                placeholder="https://www.linkedin.com/company/knight-hacks"
-                                {...field}
-                            />
-                            </FormControl>
-                        </div>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="websiteUrl"
-                    render={({ field }) => (
-                        <FormItem>
-                        <div className="flex flex-row gap-4">
-                            <FormLabel className="whitespace-nowrap pt-3">
-                            Personal Website
-                            </FormLabel>
-                            <FormControl>
-                                <ToggleEditInput 
-                                    placeholder="https://knighthacks.org"
-                                    {...field}
-                                />
                             </FormControl>
                         </div>
                         <FormMessage />

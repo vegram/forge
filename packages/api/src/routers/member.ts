@@ -9,7 +9,7 @@ import {
   Member,
 } from "@forge/db/schemas/knight-hacks";
 
-import { protectedProcedure } from "../trpc";
+import { adminProcedure, protectedProcedure } from "../trpc";
 
 export const memberRouter = {
   createMember: protectedProcedure
@@ -22,14 +22,47 @@ export const memberRouter = {
       });
     }),
 
-  updateMember: protectedProcedure
-    .input(InsertMemberSchema)
+  adminCreateMember: adminProcedure
+    .input(InsertMemberSchema.omit(
+      { 
+        userId: true,
+        age: true,
+        levelOfStudy: true, 
+        raceOrEthnicity: true, 
+        githubProfileUrl: true,
+        linkedinProfileUrl: true,
+        websiteUrl: true,
+      }))
+    .mutation(async ({ input, ctx }) => {
+      await db.insert(Member).values({
+        ...input,
+        userId: ctx.session.user.id,
+        age: new Date().getFullYear() - new Date(input.dob).getFullYear()
+      });
+    }),
+
+    adminUpdateMember: adminProcedure
+    .input(InsertMemberSchema.omit({
+      userId: true,
+      age: true,
+      levelOfStudy: true, 
+      raceOrEthnicity: true, 
+      githubProfileUrl: true,
+      linkedinProfileUrl: true,
+      websiteUrl: true,
+    }))
     .mutation(async ({ input }) => {
       if (!input.id) {
         throw new Error("Member ID is required to update a member!");
       }
-      await db.update(Member).set(input).where(eq(Member.id, input.id));
+      const { id, dob, ...updateData } = input;
+
+      await db.update(Member).set({
+        ...updateData,
+        age: new Date().getFullYear() - new Date(dob).getFullYear(),
+      }).where(eq(Member.id, id));
     }),
+
 
   deleteMember: protectedProcedure
     .input(InsertMemberSchema.pick({ id: true }))

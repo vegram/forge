@@ -3,7 +3,7 @@
 import type { InsertMember } from "@forge/db/schemas/knight-hacks";
 import type { ColumnDef, Row } from "@tanstack/react-table";
 import { useState } from "react";
-import { CaretSortIcon, DotsHorizontalIcon } from "@forge/ui";
+import { DotsHorizontalIcon } from "@forge/ui";
 import { Sheet, SheetContent } from "@forge/ui/sheet";
 import { Button } from "@forge/ui/button";
 import {
@@ -16,6 +16,7 @@ import {
 } from "@forge/ui/dropdown-menu";
 import { toast } from "@forge/ui/toast";
 import { Pencil, Copy, Trash2, User } from "lucide-react";
+import SortButton from "../../_components/SortButton";
 import {
     Dialog,
     DialogContent,
@@ -36,51 +37,51 @@ export const memberColumns: ColumnDef<
         accessorKey: "firstName",
         header: ({ column }) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                <SortButton
+                    column={column}
+                    className="ml-2 h-4 w-4"
                 >
                     First Name
-                    <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
+                </SortButton>
             );
         },
+        cell: ({ row }) => <div className="text-center">{row.original.firstName}</div>
     },
     {
         accessorKey: "lastName",
         header: ({ column }) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                <SortButton
+                    column={column}
+                    className="ml-2 h-4 w-4"
                 >
                     Last Name
-                    <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
+                </SortButton>
             );
-        }
+        },
+        cell: ({ row }) => <div className="text-center">{row.original.lastName}</div>
     },
     {
         accessorKey: "email",
         header: ({ column }) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                <SortButton 
+                    column={column}
+                    className="ml-2 h-4 w-4"    
                 >
                     Email
-                    <CaretSortIcon className="ml-2 h-4 w-4" />
-                </Button>
+                </SortButton>
             );
         },
+        cell: ({ row }) => <div className="text-center">{row.original.email}</div>
     },
-    // {
-    //     accessorKey: "Copy ID",
-    //     header: () => {
-    //         return <div>Copy ID</div>
-    //     },
-    //     cell: <></>
-    // },
+    {
+        accessorKey: "Copy ID",
+        header: () => {
+            return <div>Copy ID</div>
+        },
+        cell: CopyMemberID
+    },
     {
         accessorKey: "Update",
         header: () => {
@@ -90,9 +91,24 @@ export const memberColumns: ColumnDef<
     }
 ]
 
-// function CopyMemberID({ row }: { row: Row<InsertMember> }) {
-
-// }
+function CopyMemberID({ row }: { row: Row<InsertMember> }) {
+    const member = row.original;
+    
+    return (
+        <Button
+            variant="ghost"
+            onClick={async () => {
+                await navigator.clipboard.writeText(member.id.toString());
+                toast("Success!", {
+                    description: "Member ID copied.",
+                })
+            }}
+        >
+            <span className="sr-only">Copy Member ID</span>
+            <Copy size={16} />
+        </Button>
+    );
+}
 
 function UpdateMember({ row }: { row: Row<InsertMember> }) {
     const member = row.original;
@@ -117,11 +133,7 @@ function UpdateMember({ row }: { row: Row<InsertMember> }) {
 }
 
 // function DeleteMember({ row }: { row: Row<InsertMember> }) {
-//     const member = row.original;
-    
-//     return (
 
-//     );
 // }
 
 function Actions({ row, }: { row: Row<InsertMember> }) {

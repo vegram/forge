@@ -31,7 +31,7 @@ export default async function Members() {
           </h1>
         <div>
         </div>
-            <CreateMemberForm />
+          <CreateMemberForm />
           <DataTable columns={memberColumns} />
         </div>
       </main>

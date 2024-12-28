@@ -4,8 +4,6 @@ import { z } from "zod";
 
 import {
   GENDERS,
-  LEVELS_OF_STUDY,
-  RACES_OR_ETHNICITIES,
   SCHOOLS,
   SHIRT_SIZES,
 } from "@forge/consts/knight-hacks";
@@ -34,7 +32,7 @@ import { toast } from "@forge/ui/toast";
 import { api } from "~/trpc/react";
 
 export function CreateMemberForm() {
-  const createMember = api.member.createMember.useMutation({
+  const createMember = api.member.adminCreateMember.useMutation({
     onSuccess() {
       toast.success("Member created successfully!");
     },
@@ -60,35 +58,6 @@ export function CreateMemberForm() {
         .string()
         .pipe(z.coerce.date())
         .transform((date) => date.toISOString()),
-      githubProfileUrl: z
-        .string()
-        .regex(/^https:\/\/.+/, "Invalid URL: Please try again with https://")
-        .regex(
-          /^https:\/\/github\.com\/.+/,
-          "Invalid URL: Enter a valid GitHub link",
-        )
-        .url({ message: "Invalid URL" })
-        .optional()
-        .or(z.literal("")),
-      linkedinProfileUrl: z
-        .string()
-        .regex(/^https:\/\/.+/, "Invalid URL: Please try again with https://")
-        .regex(
-          /^https:\/\/w?w?w?\.?linkedin\.com\/.+/,
-          "Invalid URL: Enter a valid LinkedIn link",
-        )
-        .url({ message: "Invalid URL" })
-        .optional()
-        .or(z.literal("")),
-      websiteUrl: z
-        .string()
-        .regex(
-          /^https?:\/\/.+/,
-          "Invalid URL: Please try again with https:// or http://",
-        )
-        .url({ message: "Invalid URL" })
-        .optional()
-        .or(z.literal("")),
     }),
     defaultValues: {
       firstName: "",
@@ -96,16 +65,13 @@ export function CreateMemberForm() {
       email: "",
       phoneNumber: "",
       dob: "",
-      githubProfileUrl: "",
-      linkedinProfileUrl: "",
-      websiteUrl: "",
     },
   });
 
   return (
     <Form {...form}>
       <form
-        className="flex flex-col space-y-4 pb-40"
+        className="flex flex-col pb-40 space-y-4"
         noValidate
         onSubmit={form.handleSubmit((values) => {
           createMember.mutate(values);
@@ -228,72 +194,6 @@ export function CreateMemberForm() {
         />
         <FormField
           control={form.control}
-          name="raceOrEthnicity"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Race or Ethnicity
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select race/ethnicity" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {RACES_OR_ETHNICITIES.map((levelOfStudy) => (
-                        <SelectItem key={levelOfStudy} value={levelOfStudy}>
-                          {levelOfStudy}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="levelOfStudy"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Level of Study
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select level of study" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {LEVELS_OF_STUDY.map((levelOfStudy) => (
-                        <SelectItem key={levelOfStudy} value={levelOfStudy}>
-                          {levelOfStudy}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="school"
           render={({ field }) => (
             <FormItem>
@@ -342,63 +242,6 @@ export function CreateMemberForm() {
                       ))}
                     </SelectContent>
                   </Select>
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="githubProfileUrl"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  GitHub Profile
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="https://github.com/knighthacks"
-                    {...field}
-                  />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="linkedinProfileUrl"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Linkedin Profile
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="https://www.linkedin.com/company/knight-hacks"
-                    {...field}
-                  />
-                </FormControl>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="websiteUrl"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex flex-row gap-4">
-                <FormLabel className="whitespace-nowrap pt-3">
-                  Personal Website
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="https://knighthacks.org" {...field} />
                 </FormControl>
               </div>
               <FormMessage />
