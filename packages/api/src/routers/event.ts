@@ -5,18 +5,31 @@ import { TRPCError } from "@trpc/server";
 import { Routes } from "discord-api-types/v10";
 
 import {
+  CALENDAR_TIME_ZONE,
+  DEV_GOOGLE_CALENDAR_ID,
+  DEV_KNIGHTHACKS_GUILD_ID,
   DISCORD_EVENT_PRIVACY_LEVEL,
   DISCORD_EVENT_TYPE,
   EVENT_POINTS,
-  GOOGLE_CALENDAR_ID,
-  KNIGHTHACKS_GUILD_ID,
+  PROD_GOOGLE_CALENDAR_ID,
+  PROD_KNIGHTHACKS_GUILD_ID,
 } from "@forge/consts/knight-hacks";
 import { desc, eq } from "@forge/db";
 import { db } from "@forge/db/client";
 import { Event, InsertEventSchema } from "@forge/db/schemas/knight-hacks";
 
+import { env } from "../env";
 import { adminProcedure } from "../trpc";
 import { calendar, discord } from "../utils";
+
+const GOOGLE_CALENDAR_ID =
+  env.NODE_ENV === "production"
+    ? (PROD_GOOGLE_CALENDAR_ID as string)
+    : (DEV_GOOGLE_CALENDAR_ID as string);
+const KNIGHTHACKS_GUILD_ID =
+  env.NODE_ENV === "production"
+    ? (PROD_KNIGHTHACKS_GUILD_ID as string)
+    : (DEV_KNIGHTHACKS_GUILD_ID as string);
 
 export const eventRouter = {
   getEvents: adminProcedure.query(async () => {
@@ -69,15 +82,15 @@ export const eventRouter = {
       let googleEventId;
       try {
         const response = await calendar.events.insert({
-          calendarId: GOOGLE_CALENDAR_ID as string,
+          calendarId: GOOGLE_CALENDAR_ID,
           requestBody: {
             end: {
               dateTime: endIsoTimestamp,
-              timeZone: "America/New_York",
+              timeZone: CALENDAR_TIME_ZONE,
             },
             start: {
               dateTime: startIsoTimestamp,
-              timeZone: "America/New_York",
+              timeZone: CALENDAR_TIME_ZONE,
             },
             description: input.description,
             summary: formattedName,
@@ -118,6 +131,11 @@ export const eventRouter = {
         });
       }
 
+      console.log("GOOGLE CALENDAR EVENT ID", googleEventId);
+      console.log("DISCORD EVENT ID", discordEventId);
+      console.log("DISCORD GUILD", KNIGHTHACKS_GUILD_ID);
+      console.log("GOOGLE CALENDAR", GOOGLE_CALENDAR_ID);
+
       try {
         await db.insert(Event).values({
           ...input,
@@ -140,7 +158,7 @@ export const eventRouter = {
         // Clean up the event in Google Calendar if the database insert fails
         try {
           await calendar.events.delete({
-            calendarId: GOOGLE_CALENDAR_ID as string,
+            calendarId: GOOGLE_CALENDAR_ID,
             eventId: googleEventId,
           });
         } catch (error) {
@@ -200,16 +218,16 @@ export const eventRouter = {
       // Step 2: Update the event in the Google Calendar
       try {
         await calendar.events.update({
-          calendarId: GOOGLE_CALENDAR_ID as string,
+          calendarId: GOOGLE_CALENDAR_ID,
           eventId: input.googleId,
           requestBody: {
             end: {
               dateTime: endIsoTimestamp,
-              timeZone: "America/New_York",
+              timeZone: CALENDAR_TIME_ZONE,
             },
             start: {
               dateTime: startIsoTimestamp,
-              timeZone: "America/New_York",
+              timeZone: CALENDAR_TIME_ZONE,
             },
             description: input.description,
             summary: formattedName,
@@ -255,7 +273,7 @@ export const eventRouter = {
       // Step 2: Delete the event in the Google Calendar
       try {
         await calendar.events.delete({
-          calendarId: GOOGLE_CALENDAR_ID as string,
+          calendarId: GOOGLE_CALENDAR_ID,
           eventId: input.googleId,
         } as calendar_v3.Params$Resource$Events$Delete);
       } catch (error) {

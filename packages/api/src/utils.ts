@@ -6,12 +6,24 @@ import Stripe from "stripe";
 
 import type { Session } from "@forge/auth";
 import {
-  DISCORD_ADMIN_ROLE_ID,
+  DEV_DISCORD_ADMIN_ROLE_ID,
+  DEV_KNIGHTHACKS_GUILD_ID,
   GOOGLE_PERSONIFY_EMAIL,
-  KNIGHTHACKS_GUILD_ID,
+  PROD_DISCORD_ADMIN_ROLE_ID,
+  PROD_KNIGHTHACKS_GUILD_ID,
 } from "@forge/consts/knight-hacks";
 
 import { env } from "./env";
+
+const DISCORD_ADMIN_ROLE_ID =
+  env.NODE_ENV === "production"
+    ? (PROD_DISCORD_ADMIN_ROLE_ID as string)
+    : (DEV_DISCORD_ADMIN_ROLE_ID as string);
+
+const KNIGHTHACKS_GUILD_ID =
+  env.NODE_ENV === "production"
+    ? (PROD_KNIGHTHACKS_GUILD_ID as string)
+    : (DEV_KNIGHTHACKS_GUILD_ID as string);
 
 export const discord = new REST({ version: "10" }).setToken(
   env.DISCORD_BOT_TOKEN,
