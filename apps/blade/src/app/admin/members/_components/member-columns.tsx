@@ -120,14 +120,14 @@ function UpdateMember({ row }: { row: Row<InsertMember> }) {
                 <span className="sr-only">Update Member</span>
                 <Pencil size={16} />
             </Button>
-            <Sheet
+            <Dialog
                 open={memberSheetOpen}
                 onOpenChange={(setMemberSheetOpen)}
             >
-                <SheetContent>
-                    <UpdateMemberForm className="" member={member} />
-                </SheetContent>
-            </Sheet>
+                <DialogContent>
+                    <UpdateMemberForm member={member} />
+                </DialogContent>
+            </Dialog>
         </>
     )
 }

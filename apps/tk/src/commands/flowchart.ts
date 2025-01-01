@@ -56,7 +56,7 @@ export async function execute(interaction: CommandInteraction) {
       flowchartState = "https://i.imgur.com/pohVTQA.png";
       break;
     default:
-      flowchartState = "";
+      flowchartState = ""; // TODO
   }
 
   const flowchartEmbed = new EmbedBuilder()

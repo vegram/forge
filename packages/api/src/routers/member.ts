@@ -42,15 +42,7 @@ export const memberRouter = {
     }),
 
     adminUpdateMember: adminProcedure
-    .input(InsertMemberSchema.omit({
-      userId: true,
-      age: true,
-      levelOfStudy: true, 
-      raceOrEthnicity: true, 
-      githubProfileUrl: true,
-      linkedinProfileUrl: true,
-      websiteUrl: true,
-    }))
+    .input(InsertMemberSchema)
     .mutation(async ({ input }) => {
       if (!input.id) {
         throw new Error("Member ID is required to update a member!");

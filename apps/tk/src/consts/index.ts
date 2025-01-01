@@ -59,7 +59,7 @@ export const GOATS = [
   },
   {
     name: "GOATsef Osman",
-    link: "https://i.imgur.com/z2FrjKz.png",
+    link: "https://www.linkedin.com/in/youosman/",
     image: "https://i.imgur.com/z2FrjKz.png",
   },
   {

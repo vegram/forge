@@ -1,7 +1,7 @@
 import { cn } from "@forge/ui";
 import { Input } from "@forge/ui/input";
 import { Pencil, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@forge/ui/select";
 import { FormControl } from "@forge/ui/form";
 
@@ -12,16 +12,25 @@ export default function ToggleEditInput(
         items = [""], 
         onValueChange,
         defaultValue,
-        ...field }:
+        submit,
+        ...field 
+    }:
     { 
         placeholder?: string,
         type?: string, 
         items?: readonly string[]
         onValueChange?: (value: string) => void;
+        submit: boolean;
         defaultValue?: string;
     }
 ) {
     const [toggle, setToggle] = useState<boolean>(true);
+
+    useEffect(() => {
+        if (submit) {
+            setToggle(false);
+        }
+    }, [submit]);
 
     return (
         <div

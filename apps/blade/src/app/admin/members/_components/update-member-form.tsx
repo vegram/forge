@@ -7,7 +7,7 @@ import {
     SCHOOLS,
     SHIRT_SIZES,
   } from "@forge/consts/knight-hacks";
-  import { InsertMemberSchema, shirtSizeEnum } from "@forge/db/schemas/knight-hacks";
+  import { InsertMemberSchema } from "@forge/db/schemas/knight-hacks";
   import { Button } from "@forge/ui/button";
   import {
     Form,
@@ -25,12 +25,14 @@ import {
   import { useState } from "react";
   import { cn } from "@forge/ui";
   import ToggleEditInput from "../../_components/ToggleEditInput";
+  import { Input } from "@forge/ui/input";
   
   import { api } from "~/trpc/react";
 
   export function UpdateMemberForm({ member, className }: 
     { member: InsertMember, className?: string }) {
     const [schoolToggle, setSchoolToggle] = useState<boolean>(true);
+    const [submitToggle, setSubmitToggle] = useState<boolean>(false);
 
     const utils = api.useUtils();
     const updateMember = api.member.adminUpdateMember.useMutation({
@@ -42,7 +44,7 @@ import {
         },
         async onSettled() {
             await utils.member.invalidate();
-        }
+        },
     });
     const form = useForm({
         schema: InsertMemberSchema.extend({
@@ -80,9 +82,7 @@ import {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit((data) => {
-                    updateMember.mutate({
-                        ...data
-                    });
+                    updateMember.mutate({data});
                 })}
                 className={cn("flex flex-col justify-center space-y-6 pb-40", className)}
             >
@@ -97,10 +97,15 @@ import {
                                     First Name
                                 </FormLabel>
                                 <FormControl>
-                                    <ToggleEditInput 
+                                    <Input 
                                         placeholder="John"
                                         {...field}
                                     />
+                                    {/* <ToggleEditInput 
+                                        placeholder="John"
+                                        submit={submitToggle}
+                                        {...field}
+                                    /> */}
                                 </FormControl>
                             </div>
                             <FormMessage />
@@ -117,10 +122,11 @@ import {
                                     Last Name
                                 </FormLabel>
                                 <FormControl>
-                                    <ToggleEditInput
+                                    {/* <ToggleEditInput
                                         placeholder="Doe"
+                                        submit={submitToggle}
                                         {...field}
-                                    />
+                                    /> */}
                                 </FormControl>
                             </div>
                             <FormMessage />
@@ -136,10 +142,11 @@ import {
                         <div className="flex flex-row gap-4">
                             <FormLabel className="whitespace-nowrap pt-3">Email</FormLabel>
                             <FormControl>
-                                <ToggleEditInput
+                                {/* <ToggleEditInput
                                     placeholder="johndoe@gmail.com"
+                                    submit={submitToggle}
                                     {...field}
-                                />
+                                /> */}
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -156,10 +163,11 @@ import {
                             Phone Number
                             </FormLabel>
                             <FormControl>
-                                <ToggleEditInput
+                                {/* <ToggleEditInput
                                     placeholder="123-456-7890"
+                                    submit={submitToggle}
                                     {...field}
-                                />
+                                /> */}
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -176,10 +184,11 @@ import {
                             Date Of Birth
                             </FormLabel>
                             <FormControl>
-                                <ToggleEditInput
+                                {/* <ToggleEditInput
                                     type="date"
+                                    submit={submitToggle}
                                     {...field}
-                                />
+                                /> */}
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -194,13 +203,14 @@ import {
                         <div className="flex flex-row gap-4">
                             <FormLabel className="whitespace-nowrap pt-3">Gender</FormLabel>
                             <FormControl>
-                            <ToggleEditInput
+                            {/* <ToggleEditInput
                                 placeholder="Select gender"
                                 type="select"
                                 items={GENDERS}
+                                submit={submitToggle}
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
-                            />
+                            /> */}
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -226,9 +236,9 @@ import {
                                     onItemSelect={(school) => field.onChange(school)}
                                     buttonPlaceholder="Select school"
                                     inputPlaceholder="Search for school"
-                                    isDisabled={schoolToggle}
+                                    // isDisabled={!submitToggle && schoolToggle}
                                 />
-                                <button
+                                {/* <button
                                     type="submit"
                                     className="absolute right-4"
                                     onClick={(e) => {
@@ -236,9 +246,9 @@ import {
                                         setSchoolToggle(!schoolToggle);
                                     }}
                                 >
-                                    {schoolToggle && <Pencil size={16} />}
-                                    {!schoolToggle && <Check size={18} />}
-                                </button>
+                                    {!submitToggle && schoolToggle && <Pencil size={16} />}
+                                    {submitToggle && !schoolToggle && <Check size={18} />}
+                                </button> */}
                             </div>
                             </FormControl>
                         </div>
@@ -256,13 +266,14 @@ import {
                             Shirt Size
                             </FormLabel>
                             <FormControl>
-                            <ToggleEditInput
+                            {/* <ToggleEditInput
                                 placeholder="Select shirt size"
                                 type="select"
                                 items={SHIRT_SIZES}
+                                submit={submitToggle}
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
-                            />
+                            /> */}
                             </FormControl>
                         </div>
                         <FormMessage />
@@ -270,7 +281,13 @@ import {
                     )}
                     />
 
-                <Button className="w-18 mx-auto" type="submit">
+                <Button 
+                    className="w-18 mx-auto" 
+                    type="submit"
+                    onClick={() => {
+                        setSubmitToggle(true);
+                    }}    
+                >
                     Submit
                 </Button>
             </form>
