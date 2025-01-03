@@ -87,12 +87,6 @@ export const GOATS = [
       "https://media.licdn.com/dms/image/v2/D4E03AQFPV8kBG4MWIA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1685848722176?e=1740009600&v=beta&t=M7O8c5dK0A6OPapTPRSjEUSu9Xf5eGiSbbtfssFE3iM",
   },
   {
-    name: "GOATmine Rymer",
-    link: "https://www.linkedin.com/in/jasmine-rymer-148b87237/",
-    image:
-      "https://media.licdn.com/dms/image/v2/D4E03AQEpcyDyBxPAOw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1705695233775?e=1740009600&v=beta&t=jqBVOWQ4b4K2_yPQ2ul67sc_MWwj8qmUjlgcWuMsdGo",
-  },
-  {
     name: "GOATwin Bobda",
     link: "https://www.linkedin.com/in/lewin-bobda-08ba2325a/",
     image:

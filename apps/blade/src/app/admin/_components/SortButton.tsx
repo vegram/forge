@@ -1,32 +1,54 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@forge/ui/button";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 
-export default function SortButton(
-    { column, children, className }: 
-    { column: unknown, children?: string, className?: string }) {
-    const [asc, setAsc] = useState<boolean>(false);
-    const [desc, setDesc] = useState<boolean>(false);
+type SortOrder = "asc" | "desc" | null;
+
+interface SortButtonProps<SortFieldType> {
+    field: SortFieldType;
+    label: string;
+    sortField: SortFieldType | null;
+    sortOrder: SortOrder;
+    setSortField: (field: SortFieldType | null) => void;
+    setSortOrder: (order: SortOrder) => void;
+}
+
+export default function SortButton<SortFieldType>({
+    field,
+    label,
+    sortField,
+    sortOrder,
+    setSortField,
+    setSortOrder,
+}: SortButtonProps<SortFieldType>) {
+    const toggleSort = () => {
+        if (field === sortField) {
+            setSortOrder(
+                sortOrder === "asc" ? 
+                "desc" : sortOrder === "desc" ? null : "asc"
+            );
+            if (sortOrder === "desc") setSortField(null);
+        } else {
+            setSortField(field);
+            setSortOrder("asc");
+        }
+    };
+
+    let Icon = ArrowUpDown;
+    if (sortField === field) {
+        Icon = sortOrder === "asc" ? 
+            ArrowUp : sortOrder === "desc" ? ArrowDown : ArrowUpDown;
+    }
 
     return (
         <Button
             variant="ghost"
-            onClick={() => {
-                if (!asc && !desc) {
-                    setAsc(true);
-                } else {
-                    setAsc(!asc);
-                    setDesc(!desc);
-                }
-                column.toggleSorting(column.getIsSorted() === "asc");
-            }}
+            onClick={toggleSort}
+            className="h-8 px-2 lg:px-3"
         >
-            {children}
-            {(!asc && !desc) && <ArrowUpDown className={className} />}
-            {asc && <ArrowUp className={className} />}
-            {desc && <ArrowDown className={className} />}
+            {label}
+            <Icon className="ml-2 h-4 w-4" />
         </Button>
     );
 }

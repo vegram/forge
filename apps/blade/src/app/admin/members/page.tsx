@@ -4,9 +4,7 @@ import { auth } from "@forge/auth";
 
 import { SIGN_IN_PATH } from "~/consts";
 import { api, HydrateClient } from "~/trpc/server";
-import { CreateMemberForm } from "./_components/create-member-form";
-import { DataTable } from "../_components/data-table";
-import { memberColumns } from "./_components/member-columns";
+import MemberTable from "./_components/members-table";
 
 export default async function Members() {
   // authentication
@@ -26,13 +24,10 @@ export default async function Members() {
     <HydrateClient>
       <main className="container h-screen py-16">
         <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+          <h1 className="text-center text-3xl font-extrabold tracking-tight sm:text-[5rem]">
             Member Dashboard
           </h1>
-        <div>
-        </div>
-          <CreateMemberForm />
-          <DataTable columns={memberColumns} />
+          <MemberTable />
         </div>
       </main>
     </HydrateClient>

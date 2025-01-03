@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
+import SortButton from "../../_components/SortButton";
 
 import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
 import { Button } from "@forge/ui/button";
@@ -56,48 +57,6 @@ export function EventsTable() {
     return 0;
   });
 
-  // 5) Sorting toggler
-  const toggleSort = (field: SortField) => {
-    if (field === sortField) {
-      setSortOrder(
-        sortOrder === "asc" ? "desc" : sortOrder === "desc" ? null : "asc",
-      );
-      if (sortOrder === "desc") setSortField(null);
-    } else {
-      setSortField(field);
-      setSortOrder("asc");
-    }
-  };
-
-  const SortButton = ({
-    field,
-    label,
-  }: {
-    field: SortField;
-    label: string;
-  }) => {
-    let Icon = ArrowUpDown;
-    if (sortField === field) {
-      Icon =
-        sortOrder === "asc"
-          ? ArrowUp
-          : sortOrder === "desc"
-            ? ArrowDown
-            : ArrowUpDown;
-    }
-
-    return (
-      <Button
-        variant="ghost"
-        onClick={() => toggleSort(field)}
-        className="h-8 px-2 lg:px-3"
-      >
-        {label}
-        <Icon className="ml-2 h-4 w-4" />
-      </Button>
-    );
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between gap-10 border-b pb-4">
@@ -117,19 +76,54 @@ export function EventsTable() {
         <TableHeader>
           <TableRow>
             <TableHead>
-              <SortButton field="name" label="Name" />
+              <SortButton 
+                field="name" 
+                label="Name"
+                sortField={sortField}
+                sortOrder={sortOrder}
+                setSortField={setSortField}
+                setSortOrder={setSortOrder}
+              />
             </TableHead>
             <TableHead>
-              <SortButton field="tag" label="Tag" />
+              <SortButton 
+                field="tag" 
+                label="Tag" 
+                sortField={sortField}  
+                sortOrder={sortOrder}
+                setSortField={setSortField}
+                setSortOrder={setSortOrder}
+              />
             </TableHead>
             <TableHead>
-              <SortButton field="start_datetime" label="Date" />
+              <SortButton 
+                field="start_datetime" 
+                label="Date" 
+                sortField={sortField}  
+                sortOrder={sortOrder}
+                setSortField={setSortField}
+                setSortOrder={setSortOrder}
+              />
             </TableHead>
             <TableHead>
-              <SortButton field="location" label="Location" />
+              <SortButton 
+                field="location" 
+                label="Location" 
+                sortField={sortField}
+                sortOrder={sortOrder}
+                setSortField={setSortField}
+                setSortOrder={setSortOrder}
+              />
             </TableHead>
             <TableHead className="text-right">
-              <SortButton field="numAttended" label="Attended" />
+              <SortButton 
+                field="numAttended" 
+                label="Attended" 
+                sortField={sortField}
+                sortOrder={sortOrder}
+                setSortField={setSortField}
+                setSortOrder={setSortOrder}
+              />
             </TableHead>
             <TableHead className="text-right">
               <Label>Update</Label>
