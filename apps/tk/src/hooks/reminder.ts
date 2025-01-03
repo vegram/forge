@@ -304,7 +304,7 @@ export function execute() {
     });
 
     // PUBLIC-REMINDERS for Testing: 12:00PM
-    cron.schedule("0 16 * * * *", () => {
+    cron.schedule("0 16 * * *", () => {
       // Avoid returning a Promise from the cron callback
       void cronLogic(pubWebhook);
     });
