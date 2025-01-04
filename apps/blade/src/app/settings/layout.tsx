@@ -4,7 +4,7 @@ import { ArrowLeftIcon, cn } from "@forge/ui";
 import { buttonVariants } from "@forge/ui/button";
 import { Separator } from "@forge/ui/separator";
 
-import { SIDEBAR_NAV_ITEMS, SIGN_IN_PATH } from "~/consts";
+import { SIDEBAR_NAV_ITEMS } from "~/consts";
 import { SidebarNav } from "./_components/sidebar-nav";
 
 interface SettingsLayoutProps {
@@ -16,11 +16,11 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
     <>
       <div className="space-y-6 p-10 pb-16 md:block">
         <Link
-          href={SIGN_IN_PATH}
+          href={"/dashboard"}
           className={cn(buttonVariants({ variant: "link" }), "!px-0")}
         >
           <ArrowLeftIcon className="mr-1" />
-          back to home
+          Dashboard
         </Link>
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>

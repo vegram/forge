@@ -7,9 +7,12 @@ import {
 } from "@forge/ui/navigation-menu";
 import { Separator } from "@forge/ui/separator";
 
+import { api } from "~/trpc/server";
 import { UserDropdown } from "./user-dropdown";
 
-export function SessionNavbar() {
+export async function SessionNavbar() {
+  const member = await api.member.getMember();
+
   return (
     <div className="flex items-center justify-between px-3 py-3 sm:px-10 sm:py-5">
       <div className="flex items-center justify-center gap-x-2 text-lg font-extrabold sm:text-[2rem]">
@@ -26,7 +29,7 @@ export function SessionNavbar() {
       <NavigationMenu className="h-[35px] w-[35px]">
         <NavigationMenuList>
           <NavigationMenuItem className="flex items-center justify-center">
-            <UserDropdown />
+            <UserDropdown memberExists={!!member} />
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

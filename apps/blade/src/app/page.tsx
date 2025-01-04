@@ -1,18 +1,11 @@
-import { auth } from "@forge/auth";
-
 import { HydrateClient } from "~/trpc/server";
-import { AuthShowcase } from "./_components/auth-showcase";
-import { SessionNavbar } from "./_components/navigation/session-navbar";
-import { UserInterface } from "./_components/user-interface";
+import { Auth } from "./_components/auth-showcase";
 
-export default async function HomePage() {
-  const session = await auth();
-
+export default function HomePage() {
   return (
     <HydrateClient>
-      {session && <SessionNavbar />}
       <main className="container h-screen py-16">
-        {session ? <UserInterface /> : <AuthShowcase />}
+        <Auth />
       </main>
     </HydrateClient>
   );

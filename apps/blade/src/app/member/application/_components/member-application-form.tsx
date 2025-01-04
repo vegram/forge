@@ -42,7 +42,7 @@ export function MemberApplicationForm() {
     onSuccess() {
       toast.success("Application submitted successfully!");
       // user gets sent back to homepage upon successful form submission
-      router.push("/");
+      router.push("/dashboard");
       router.refresh();
     },
     onError() {
@@ -51,9 +51,6 @@ export function MemberApplicationForm() {
   });
 
   const uploadResume = api.resume.uploadResume.useMutation({
-    onSuccess() {
-      toast.success("Resume successfully uploaded!");
-    },
     onError() {
       toast.error("There was a problem storing your resume, please try again!");
     },
@@ -488,10 +485,11 @@ export function MemberApplicationForm() {
               <FormControl>
                 <Input
                   type="file"
-                  placeholder=""
                   {...fileRef}
                   onChange={(event) => {
-                    field.onChange(event.target.files?.[0] ?? undefined);
+                    field.onChange(
+                      event.target.files?.[0] ? event.target.files : undefined,
+                    );
                   }}
                 />
               </FormControl>

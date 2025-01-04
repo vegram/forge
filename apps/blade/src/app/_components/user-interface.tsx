@@ -1,22 +1,16 @@
+import { redirect } from "next/navigation";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@forge/ui/tabs";
 
 import { api } from "~/trpc/server";
 import MemberDashboard from "./member-dashboard/member-dashboard";
-import { HackerAppCard, MemberAppCard } from "./option-cards";
 
 export async function UserInterface() {
   const member = await api.member.getMember();
 
   // This is temporary in-place until hackathon dashboard is made
   if (!member) {
-    return (
-      <div className="flex items-center justify-center">
-        <div className="mx-auto grid max-w-4xl gap-6 p-4 md:grid-cols-2">
-          <MemberAppCard />
-          <HackerAppCard />
-        </div>
-      </div>
-    );
+    redirect("/member/application");
   }
 
   return (

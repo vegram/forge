@@ -59,9 +59,6 @@ export function MemberProfileForm({
   });
 
   const uploadResume = api.resume.uploadResume.useMutation({
-    onSuccess() {
-      toast.success("Resume successfully uploaded!");
-    },
     onError() {
       toast.error("There was a problem storing your resume, please try again!");
     },

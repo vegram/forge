@@ -1,10 +1,13 @@
 import Image from "next/image";
 
-import { signIn } from "@forge/auth";
+import { auth, signIn } from "@forge/auth";
 import { Button } from "@forge/ui/button";
 import { Separator } from "@forge/ui/separator";
+import Link from "next/link";
 
-export function AuthShowcase() {
+export async function Auth() {
+  const session = await auth();
+
   return (
     <div className="flex h-96 flex-col items-center justify-center gap-4">
       <div className="absolute left-0 top-0 flex items-center justify-between px-3 py-3 sm:px-10 sm:py-5">
@@ -23,17 +26,23 @@ export function AuthShowcase() {
       <h1 className="mb-2 w-full break-words text-center text-3xl font-extrabold leading-tight tracking-tight sm:text-[3rem] md:w-[600px]">
         Everything Knight Hacks. All-in-one platform.
       </h1>
-      <form>
-        <Button
-          size="lg"
-          formAction={async () => {
-            "use server";
-            await signIn("discord");
-          }}
-        >
-          Sign in with Discord
-        </Button>
-      </form>
+      {!session ? (
+        <form>
+          <Button
+            size="lg"
+            formAction={async () => {
+              "use server";
+              await signIn("discord", { redirectTo: "/dashboard" });
+            }}
+          >
+            Sign in with Discord
+          </Button>
+        </form>
+      ) : (
+        <Link href={"/dashboard"}>
+          <Button size="lg">Go to Dashboard</Button>
+        </Link>
+      )}
     </div>
   );
 }

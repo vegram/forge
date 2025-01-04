@@ -12,13 +12,12 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@forge/ui/dropdown-menu";
 
 import { api } from "~/trpc/react";
 
-export function UserDropdown() {
+export function UserDropdown({ memberExists }: { memberExists: boolean }) {
   const utils = api.useUtils();
   const router = useRouter();
   const { data } = api.user.getUserAvatar.useQuery();
@@ -36,25 +35,26 @@ export function UserDropdown() {
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-screen sm:w-56">
+      <DropdownMenuContent className="mr-4 w-screen sm:w-56">
         <DropdownMenuLabel>{data ? data.name : "My Account"}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onSelect={() => router.push("/settings")}>
-            <span>Member Profile</span>
-            <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {memberExists && (
+            <DropdownMenuItem onSelect={() => router.push("/settings")}>
+              <span>Member Profile</span>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => router.push("/settings")}>
-            <span>Settings</span>
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {memberExists && (
+            <DropdownMenuItem onSelect={() => router.push("/settings")}>
+              <span>Settings</span>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         {/* Made signing out client-side due to dropdown item keyboard accessibility issues */}
         <DropdownMenuItem onSelect={() => signOut()}>
           <Button type="submit">Sign out</Button>
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
