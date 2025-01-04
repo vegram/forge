@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import SortButton from "../../_components/SortButton";
 
 import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
-import { Button } from "@forge/ui/button";
 import { Input } from "@forge/ui/input";
 import { Label } from "@forge/ui/label";
 import {
