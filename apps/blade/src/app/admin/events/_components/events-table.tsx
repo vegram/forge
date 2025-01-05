@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import SortButton from "../../_components/SortButton";
 
 import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
+import { Button } from "@forge/ui/button";
 import { Input } from "@forge/ui/input";
 import { Label } from "@forge/ui/label";
 import {
@@ -31,8 +32,12 @@ export function EventsTable() {
   const [sortOrder, setSortOrder] = useState<SortOrder>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // 3) The TRPC query should return an array of Event
+  //    e.g., your procedure might do: return db.select().from(Event)....
+  //    plus "numAttended" if you have a join or subquery
   const { data: events } = api.event.getEvents.useQuery();
 
+  // 4) Filter & sort logic stays the same, but we rely on Event
   const filteredEvents = (events ?? []).filter((event) =>
     Object.values(event).some((value) => {
       if (value === null) return false;
@@ -50,8 +55,6 @@ export function EventsTable() {
   });
 
   return (
-    // Display a loader while the events are being fetched
-
     <div>
       <div className="flex items-center justify-between gap-10 border-b pb-4">
         <div className="relative w-full">
@@ -125,6 +128,12 @@ export function EventsTable() {
             <TableHead className="text-right">
               <Label>Delete</Label>
             </TableHead>
+            <TableHead className="text-right">
+              <Label>Update</Label>
+            </TableHead>
+            <TableHead className="text-right">
+              <Label>Delete</Label>
+            </TableHead>
           </TableRow>
         </TableHeader>
 
@@ -161,10 +170,7 @@ export function EventsTable() {
           <TableRow>
             <TableCell colSpan={4}>Total Attendance</TableCell>
             <TableCell className="text-right">
-              {sortedEvents.reduce(
-                (sum, event) => sum + (event as Event).numAttended,
-                0,
-              )}
+              {sortedEvents.reduce((sum, event) => sum + event.numAttended, 0)}
             </TableCell>
             <TableCell colSpan={2} />
           </TableRow>
