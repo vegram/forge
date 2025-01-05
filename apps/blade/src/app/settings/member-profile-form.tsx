@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { redirect } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
@@ -38,6 +37,7 @@ import { toast } from "@forge/ui/toast";
 
 import type { api as serverCaller } from "~/trpc/server";
 import { api } from "~/trpc/react";
+import { MemberAppCard } from "../_components/option-cards";
 import DeleteMemberButton from "./_components/delete-member-button";
 
 export function MemberProfileForm({
@@ -45,17 +45,12 @@ export function MemberProfileForm({
 }: {
   data: Awaited<ReturnType<(typeof serverCaller.member)["getMember"]>>;
 }) {
-  const utils = api.useUtils();
   const [loading, setLoading] = useState(false);
+  const utils = api.useUtils();
 
   const { data: member, isError } = api.member.getMember.useQuery(undefined, {
     initialData: data,
   });
-
-  // Member will always be true if we're here
-  if (!member) {
-    redirect("/");
-  }
 
   const updateMember = api.member.updateMember.useMutation({
     async onSuccess() {
@@ -74,13 +69,17 @@ export function MemberProfileForm({
     onError() {
       toast.error("There was a problem storing your resume, please try again!");
     },
+    async onSettled() {
+      await utils.resume.invalidate();
+    },
   });
 
   const form = useForm({
-    schema: InsertMemberSchema.extend({
+    schema: InsertMemberSchema.omit({ age: true, userId: true }).extend({
       firstName: z.string().min(1, "Required"),
       lastName: z.string().min(1, "Required"),
-      age: z.number(),
+      // Age will be derived from dob on the server
+      age: z.undefined(),
       email: z.string().email("Invalid email").min(1, "Required"),
       phoneNumber: z
         .string()
@@ -169,20 +168,20 @@ export function MemberProfileForm({
         .or(z.literal("")),
     }),
     defaultValues: {
-      firstName: member.firstName,
-      lastName: member.lastName,
-      email: member.email,
-      phoneNumber: member.phoneNumber,
-      dob: member.dob,
-      gradDate: member.gradDate,
-      githubProfileUrl: member.githubProfileUrl ?? "",
-      linkedinProfileUrl: member.linkedinProfileUrl ?? "",
-      websiteUrl: member.websiteUrl ?? "",
-      gender: member.gender,
-      levelOfStudy: member.levelOfStudy,
-      raceOrEthnicity: member.raceOrEthnicity,
-      shirtSize: member.shirtSize,
-      school: member.school,
+      firstName: member?.firstName,
+      lastName: member?.lastName,
+      email: member?.email,
+      phoneNumber: member?.phoneNumber,
+      dob: member?.dob,
+      gradDate: member?.gradDate,
+      githubProfileUrl: member?.githubProfileUrl ?? "",
+      linkedinProfileUrl: member?.linkedinProfileUrl ?? "",
+      websiteUrl: member?.websiteUrl ?? "",
+      gender: member?.gender,
+      levelOfStudy: member?.levelOfStudy,
+      raceOrEthnicity: member?.raceOrEthnicity,
+      shirtSize: member?.shirtSize,
+      school: member?.school,
     },
   });
 
@@ -216,6 +215,14 @@ export function MemberProfileForm({
     );
   }
 
+  if (!member) {
+    return (
+      <div className="flex items-center justify-center">
+        <MemberAppCard />
+      </div>
+    );
+  }
+
   return (
     <>
       <Form {...form}>
@@ -235,20 +242,9 @@ export function MemberProfileForm({
                 });
               }
 
-              const today = new Date();
-              const dobDate = new Date(values.dob);
-              let age = today.getFullYear() - dobDate.getFullYear();
-              const monthDiff = today.getMonth() - dobDate.getMonth();
-              if (
-                monthDiff < 0 ||
-                (monthDiff === 0 && today.getDate() < dobDate.getDate())
-              ) {
-                age--;
-              }
-              values.age = age;
-
               updateMember.mutate({
                 ...values,
+                id: member.id,
                 resumeUrl, // Include uploaded resume URL
               });
             } catch (error) {

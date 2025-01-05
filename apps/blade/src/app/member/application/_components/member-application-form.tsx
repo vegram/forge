@@ -40,6 +40,7 @@ import { api } from "~/trpc/react";
 export function MemberApplicationForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const utils = api.useUtils();
 
   const createMember = api.member.createMember.useMutation({
     onSuccess() {
@@ -59,6 +60,9 @@ export function MemberApplicationForm() {
   const uploadResume = api.resume.uploadResume.useMutation({
     onError() {
       toast.error("There was a problem storing your resume, please try again!");
+    },
+    async onSettled() {
+      await utils.resume.invalidate();
     },
   });
 

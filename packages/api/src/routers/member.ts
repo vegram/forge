@@ -1,4 +1,3 @@
-import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
 import { DUES_PAYMENT } from "@forge/consts/knight-hacks";
@@ -26,7 +25,7 @@ export const memberRouter = {
     }),
 
   updateMember: adminProcedure
-    .input(InsertMemberSchema)
+    .input(InsertMemberSchema.omit({ userId: true, age: true }))
     .mutation(async ({ input }) => {
       if (!input.id) {
         throw new TRPCError({
@@ -34,13 +33,32 @@ export const memberRouter = {
           code: "BAD_REQUEST",
         });
       }
+
       const { id, dob, ...updateData } = input;
+
+      const member = await db.query.Member.findFirst({
+        where: (t, { eq }) => eq(t.id, id),
+      });
+
+      const resume = input.resumeUrl ? input.resumeUrl : member?.resumeUrl;
+
+      // Check if the age has been updated
+      const today = new Date();
+      const birthDate = new Date(dob);
+      const hasBirthdayPassed =
+        birthDate.getMonth() <= today.getMonth() &&
+        birthDate.getDate() <= today.getDate();
+      const newAge = hasBirthdayPassed
+        ? today.getFullYear() - birthDate.getFullYear()
+        : today.getFullYear() - birthDate.getFullYear() - 1;
 
       await db
         .update(Member)
         .set({
           ...updateData,
-          age: new Date().getFullYear() - new Date(dob).getFullYear(),
+          dob: dob,
+          resumeUrl: resume,
+          age: newAge,
         })
         .where(eq(Member.id, id));
     }),

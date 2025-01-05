@@ -90,14 +90,6 @@ export const resumeRouter = {
     }
 
     try {
-      // Make sure the file actually exists
-      await s3Client.statObject(bucketName, filename);
-    } catch {
-      console.error("Resume file does not exist in S3");
-      return { url: null };
-    }
-
-    try {
       const expiresIn = 60 * 60; // 1 hour
       const presignedUrl = await s3Client.presignedUrl(
         "GET",
