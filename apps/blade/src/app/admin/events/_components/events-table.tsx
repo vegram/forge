@@ -1,12 +1,8 @@
 "use client";
 
 import { useState } from "react";
-<<<<<<< HEAD
 import { Search } from "lucide-react";
 import SortButton from "../../_components/SortButton";
-=======
-import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
->>>>>>> 51e3f52 (creates event dialog popup for new events)
 
 import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
 import { Input } from "@forge/ui/input";
@@ -20,10 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@forge/ui/table";
-import { CreateEventButton } from "./create-event";
-
-import { api } from "~/trpc/react";
-import { CreateEventButton } from "./create-event";
 
 import { api } from "~/trpc/react";
 import { CreateEventButton } from "./create-event";
@@ -38,10 +30,6 @@ export function EventsTable() {
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  const { data: events } = api.event.getEvents.useQuery();
-
-  console.log(events);
 
   const { data: events } = api.event.getEvents.useQuery();
 
@@ -62,6 +50,8 @@ export function EventsTable() {
   });
 
   return (
+    // Display a loader while the events are being fetched
+
     <div>
       <div className="flex items-center justify-between gap-10 border-b pb-4">
         <div className="relative w-full">
@@ -171,7 +161,10 @@ export function EventsTable() {
           <TableRow>
             <TableCell colSpan={4}>Total Attendance</TableCell>
             <TableCell className="text-right">
-              {sortedEvents.reduce((sum, event) => sum + event.numAttended, 0)}
+              {sortedEvents.reduce(
+                (sum, event) => sum + (event as Event).numAttended,
+                0,
+              )}
             </TableCell>
             <TableCell colSpan={2} />
           </TableRow>
