@@ -37,17 +37,19 @@ export default function FinalDuesDialogButton(
     const utils = api.useUtils();
 
     const clearDues = api.member.clearAllDues.useMutation({
-        async onSuccess() {
+        onSuccess() {
             toast.success("All dues cleared successfully!");
             setIsOpen(false);
             setConfirmText("");
-            setIsLoading(false);
-            await utils.member.invalidate();
         },
         onError(opts) {
             toast.error(opts.message);
             setIsLoading(false);
         },
+        async onSettled() {
+            setIsLoading(false);
+            await utils.member.invalidate();
+        }
     });
 
     const handleClearDues = () => {
