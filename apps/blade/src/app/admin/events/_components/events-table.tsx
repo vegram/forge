@@ -1,8 +1,12 @@
 "use client";
 
 import { useState } from "react";
+<<<<<<< HEAD
 import { Search } from "lucide-react";
 import SortButton from "../../_components/SortButton";
+=======
+import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
+>>>>>>> 51e3f52 (creates event dialog popup for new events)
 
 import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
 import { Input } from "@forge/ui/input";
@@ -16,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@forge/ui/table";
+import { CreateEventButton } from "./create-event";
 
 import { api } from "~/trpc/react";
 import { CreateEventButton } from "./create-event";
