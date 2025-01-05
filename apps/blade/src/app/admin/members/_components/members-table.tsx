@@ -137,9 +137,6 @@ export default function MemberTable() {
                 {duesMap.has(member.id) ? "Yes" : "No"}
               </TableCell>
               <TableCell className="text-center">
-                {/* <Button onClick={() => console.log(duesMap)}>
-                                    yo
-                                </Button> */}
                 <DuesToggleButton
                   member={member}
                   status={duesMap.has(member.id)}
