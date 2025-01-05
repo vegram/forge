@@ -23,9 +23,7 @@ export default async function Members() {
   return (
     <HydrateClient>
       <main className="container h-screen">
-      <main className="container h-screen">
         <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="py-12 text-center text-3xl font-extrabold tracking-tight sm:text-5xl">
           <h1 className="py-12 text-center text-3xl font-extrabold tracking-tight sm:text-5xl">
             Member Dashboard
           </h1>
