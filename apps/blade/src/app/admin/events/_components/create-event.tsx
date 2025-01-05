@@ -557,17 +557,40 @@ export function CreateEventButton() {
           <form
             onSubmit={form.handleSubmit((values) => {
               setIsLoading(true);
-              // Convert date + hour/minute/amPm to a valid Date object
-              const finalDate = new Date(values.date);
-              let hour24 = parseInt(values.hour, 10) || 0;
-
-              if (values.amPm === "PM" && hour24 < 12) {
+              // Convert start date + hour/minute/amPm to a valid Date object
+              const finalStartDate = new Date(values.date);
+              let hour24 = parseInt(values.startHour, 10) || 0;
+              if (values.startAmPm === "PM" && hour24 < 12) {
                 hour24 += 12;
               }
-              if (values.amPm === "AM" && hour24 === 12) {
+              if (values.startAmPm === "AM" && hour24 === 12) {
                 hour24 = 0;
               }
-              finalDate.setHours(hour24, parseInt(values.minute, 10) || 0);
+              finalStartDate.setHours(
+                hour24,
+                parseInt(values.startMinute, 10) || 0,
+              );
+
+              // Convert end date + hour/minute/amPm to a valid Date object
+              const finalEndDate = new Date(values.date);
+              let endHour24 = parseInt(values.endHour, 10) || 0;
+              if (values.endAmPm === "PM" && endHour24 < 12) {
+                endHour24 += 12;
+              }
+              if (values.endAmPm === "AM" && endHour24 === 12) {
+                endHour24 = 0;
+              }
+              finalEndDate.setHours(
+                endHour24,
+                parseInt(values.endMinute, 10) || 0,
+              );
+
+              // Ensure the end date is after the start date
+              if (finalEndDate <= finalStartDate) {
+                toast.error("End date must be after the start date.");
+                setIsLoading(false);
+                return;
+              }
 
               // Pass the final date/time to TRPC
               createEvent.mutate({
@@ -575,18 +598,16 @@ export function CreateEventButton() {
                 description: values.description,
                 location: values.location,
                 tag: values.tag,
-                datetime: finalDate,
+                start_datetime: finalStartDate,
+                end_datetime: finalEndDate,
               });
-
-              // Debug log
-              console.log("Form values", values, finalDate);
             })}
             noValidate
           >
             <DialogHeader>
               <DialogTitle>Create New Event</DialogTitle>
               <DialogDescription>
-                Fill in the details for the new event. Click save when you're
+                Fill in the details for the new event. Click create when you're
                 done.
               </DialogDescription>
             </DialogHeader>
@@ -684,10 +705,20 @@ export function CreateEventButton() {
                                 field.value ? new Date(field.value) : undefined
                               }
                               onSelect={(selectedDate) => {
-                                // Convert the chosen date to an ISO string
-                                if (selectedDate) {
-                                  field.onChange(selectedDate.toISOString());
+                                // Make sure the selected date is not null
+                                if (!selectedDate) {
+                                  toast.error("Please select a date.");
+                                  return;
                                 }
+
+                                // Make sure the selected date is in the future
+                                if (selectedDate < new Date()) {
+                                  toast.error("Please select a future date.");
+                                  return;
+                                }
+
+                                // Convert the chosen date to an ISO string
+                                field.onChange(selectedDate.toISOString());
                               }}
                               initialFocus
                             />
@@ -700,14 +731,14 @@ export function CreateEventButton() {
                 )}
               />
 
-              {/* Time (Hour, Minute, AM/PM) */}
+              {/* Start Time (Hour, Minute, AM/PM) */}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Time</Label>
+                <Label className="text-right">Start</Label>
                 <div className="col-span-3 flex items-center space-x-2">
                   {/* Hour */}
                   <FormField
                     control={form.control}
-                    name="hour"
+                    name="startHour"
                     render={({ field }) => (
                       <FormItem className="mb-0">
                         <FormControl>
@@ -738,7 +769,7 @@ export function CreateEventButton() {
                   {/* Minute */}
                   <FormField
                     control={form.control}
-                    name="minute"
+                    name="startMinute"
                     render={({ field }) => (
                       <FormItem className="mb-0">
                         <FormControl>
@@ -768,7 +799,104 @@ export function CreateEventButton() {
                   {/* AM/PM */}
                   <FormField
                     control={form.control}
-                    name="amPm"
+                    name="startAmPm"
+                    render={({ field }) => (
+                      <FormItem className="mb-0">
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-[80px]">
+                                <SelectValue placeholder="AM/PM" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {amPmOptions.map((option) => (
+                                <SelectItem key={option} value={option}>
+                                  {option}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* End Time (Hour, Minute, AM/PM) */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">End</Label>
+                <div className="col-span-3 flex items-center space-x-2">
+                  {/* Hour */}
+                  <FormField
+                    control={form.control}
+                    name="endHour"
+                    render={({ field }) => (
+                      <FormItem className="mb-0">
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-[80px]">
+                                <SelectValue placeholder="HH" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {hours.map((h) => (
+                                <SelectItem key={h} value={h}>
+                                  {h}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <span>:</span>
+
+                  {/* Minute */}
+                  <FormField
+                    control={form.control}
+                    name="endMinute"
+                    render={({ field }) => (
+                      <FormItem className="mb-0">
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-[80px]">
+                                <SelectValue placeholder="MM" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {minutes.map((m) => (
+                                <SelectItem key={m} value={m}>
+                                  {m}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* AM/PM */}
+                  <FormField
+                    control={form.control}
+                    name="endAmPm"
                     render={({ field }) => (
                       <FormItem className="mb-0">
                         <FormControl>

@@ -1,14 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import { CalendarIcon, Loader2, Pencil } from "lucide-react";
-import { z } from "zod";
-
-import { EVENT_TAGS } from "@forge/consts/knight-hacks";
-import { InsertEventSchema } from "@forge/db/schemas/knight-hacks";
-import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
-import { cn } from "@forge/ui";
+import { useState } from "react";
+import { Loader2, Trash2 } from "lucide-react";
 import { Button } from "@forge/ui/button";
 import {
   Dialog,
@@ -21,16 +14,15 @@ import {
 } from "@forge/ui/dialog";
 import { Input } from "@forge/ui/input";
 import { toast } from "@forge/ui/toast";
+import { USE_CAUTION } from "@forge/consts/knight-hacks";
 
 import { api } from "~/trpc/react";
 
-/**
- * If your event prop has more fields, adjust accordingly.
- * We only need 'id' and possibly 'name' to show in the dialog.
- */
 interface DeleteEventButtonProps {
   event: {
     id: string;
+    discordId: string;
+    googleId: string;
     name: string;
   };
 }
@@ -49,8 +41,8 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
       setIsOpen(false);
       setConfirmationText("");
     },
-    onError() {
-      toast.error("Oops! Something went wrong. Please try again later.");
+    onError(opts) {
+      toast.error(opts.message);
     },
     async onSettled() {
       setIsLoading(false);
@@ -61,7 +53,11 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
 
   const handleDelete = () => {
     setIsLoading(true);
-    deleteEvent.mutate({ id: event.id });
+    deleteEvent.mutate({
+      id: event.id,
+      discordId: event.discordId,
+      googleId: event.googleId,
+    });
   };
 
   return (
@@ -83,8 +79,7 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
 
         <div className="space-y-4 py-2">
           <p>
-            Please type <strong>"I am absolutely sure"</strong> to confirm
-            deletion:
+            Please type <strong>"I am absolutely sure"</strong> to confirm deletion:
           </p>
           <Input
             placeholder='Type "I am absolutely sure"'
@@ -105,7 +100,11 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
           </Button>
           <Button
             variant="destructive"
-            disabled={confirmationText !== "I am absolutely sure" || isLoading}
+            disabled={
+              (USE_CAUTION as boolean)
+                ? confirmationText !== "I am absolutely sure" || isLoading
+                : isLoading
+            }
             onClick={handleDelete}
           >
             {isLoading ? <Loader2 className="animate-spin" /> : "Delete Event"}

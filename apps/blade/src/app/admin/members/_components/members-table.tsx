@@ -14,9 +14,16 @@ import { Input } from "@forge/ui/input";
 import SortButton from "../../_components/SortButton";
 import { Label } from "@forge/ui/label";
 
+import { Button } from "@forge/ui/button";
+
+import UpdateMemberButton from "./update-member";
+import DeleteMemberButton from "./delete-member";
+import DuesToggleButton from "./dues-toggle";
+import ClearDuesButton from "./clear-dues";
+
 import { api } from "~/trpc/react";
 import { Search } from "lucide-react";
-import { InsertMember } from "@forge/db/schemas/knight-hacks";
+import type { InsertMember } from "@forge/db/schemas/knight-hacks";
 
 type Member = InsertMember;
 type SortField = keyof Member;
@@ -28,6 +35,12 @@ export default function MemberTable() {
     const [searchTerm, setSearchTerm] = useState("");
 
     const { data: members } = api.member.getMembers.useQuery();
+    const { data: duesPayingStatus } = api.member.getDuesPayingMembers.useQuery();
+    const duesMap = new Map();
+
+    for (const status of duesPayingStatus ?? []) {
+        duesMap.set(status.id);
+    }
 
     const filteredMembers = (members ?? []).filter((member) => 
         Object.values(member).some((value) => {
@@ -47,7 +60,7 @@ export default function MemberTable() {
 
     return (
         <div>
-            <div className="flex items-center justify-between gap-10 border-b pb-4">
+            <div className="flex items-center justify-between gap-2 border-b pb-4">
                 <div className="relative w-full">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input 
@@ -57,11 +70,14 @@ export default function MemberTable() {
                         className="pl-8"
                     />
                 </div>
+                <div>
+                    <ClearDuesButton />
+                </div>
             </div>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>
+                        <TableHead className="text-center">
                             <SortButton 
                                 field="firstName"
                                 label="First Name"
@@ -71,7 +87,7 @@ export default function MemberTable() {
                                 setSortOrder={setSortOrder}
                             />
                         </TableHead>
-                        <TableHead>
+                        <TableHead className="text-center">
                             <SortButton 
                                     field="lastName"
                                     label="Last Name"
@@ -81,7 +97,7 @@ export default function MemberTable() {
                                     setSortOrder={setSortOrder}
                             />
                         </TableHead>
-                        <TableHead>
+                        <TableHead className="text-center">
                             <Label>Phone Number</Label>
                         </TableHead>
                         <TableHead>
@@ -94,13 +110,16 @@ export default function MemberTable() {
                                     setSortOrder={setSortOrder}
                             />
                         </TableHead>
-                        <TableHead>
+                        <TableHead className="text-center">
                             <Label>Dues Paying?</Label>
                         </TableHead>
-                        <TableHead className="text-right">
+                        <TableHead className="text-center">
+                            <Label>Dues Toggle</Label>
+                        </TableHead>
+                        <TableHead className="text-center">
                             <Label>Update</Label>
                         </TableHead>
-                        <TableHead className="text-right">
+                        <TableHead className="text-center">
                             <Label>Delete</Label>
                         </TableHead>
 
@@ -120,6 +139,24 @@ export default function MemberTable() {
                             </TableCell>
                             <TableCell className="font-medium">
                                 {member.email}
+                            </TableCell>
+                            <TableCell className="font-medium text-center">
+                                {duesMap.has(member.id) ? "Yes" : "No"}
+                            </TableCell>
+                            <TableCell className="text-center">
+                                {/* <Button onClick={() => console.log(duesMap)}>
+                                    yo
+                                </Button> */}
+                                <DuesToggleButton 
+                                    member={member} 
+                                    status={duesMap.has(member.id)} 
+                                />
+                            </TableCell>
+                            <TableCell className="text-center">
+                                <UpdateMemberButton member={member} />
+                            </TableCell>
+                            <TableCell className="text-center">
+                                <DeleteMemberButton member={member} />
                             </TableCell>
                         </TableRow>
                     ))}

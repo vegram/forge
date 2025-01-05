@@ -64,6 +64,10 @@ export const DISCORD_EVENT_PRIVACY_LEVEL = 2;
 
 export const CALENDAR_TIME_ZONE = "America/New_York";
 
+export const DUES_PAYMENT = 25;
+
+export const CLEAR_DUES_MESSAGE = "I am aware of the consequences regarding this action if it were by mistake. I am absolutely sure that I want to clear all dues."
+
 export const PROD_GOOGLE_CALENDAR_ID =
   "c_0b9df2b0062a5d711fc16060ff3286ef404b174bfafc4cbdd4e3009e91536e94@group.calendar.google.com";
 export const DEV_GOOGLE_CALENDAR_ID =

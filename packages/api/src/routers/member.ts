@@ -1,13 +1,16 @@
+import { TRPCError } from "@trpc/server";
 import type { TRPCRouterRecord } from "@trpc/server";
 
-import { and, eq, isNull } from "@forge/db";
+import { and, eq, isNull, exists } from "@forge/db";
 import { db } from "@forge/db/client";
 import {
+  DuesPayment,
   Event,
   EventAttendee,
   InsertMemberSchema,
   Member,
 } from "@forge/db/schemas/knight-hacks";
+import { DUES_PAYMENT } from "@forge/consts/knight-hacks";
 
 import { adminProcedure, protectedProcedure } from "../trpc";
 
@@ -45,7 +48,10 @@ export const memberRouter = {
     .input(InsertMemberSchema)
     .mutation(async ({ input }) => {
       if (!input.id) {
-        throw new Error("Member ID is required to update a member!");
+        throw new TRPCError({
+          message: "Member ID is required to update a member!",
+          code: "BAD_REQUEST",
+        });
       }
       const { id, dob, ...updateData } = input;
 
@@ -56,11 +62,14 @@ export const memberRouter = {
     }),
 
 
-  deleteMember: protectedProcedure
+  deleteMember: adminProcedure
     .input(InsertMemberSchema.pick({ id: true }))
     .mutation(async ({ input }) => {
       if (!input.id) {
-        throw new Error("Member ID is required to delete a member!");
+        throw new TRPCError({
+          message: "Member ID is required to delete a member!",
+          code: "BAD_REQUEST",
+        });      
       }
       await db.delete(Member).where(eq(Member.id, input.id));
     }),
@@ -75,6 +84,52 @@ export const memberRouter = {
 
     return member[member.length - 1];
   }),
+
+  getDuesPayingMembers: protectedProcedure.query(async () => {
+    const duesPayingMembers = await db
+      .select()
+      .from(Member)
+      .where(exists(db.select()
+        .from(DuesPayment)
+        .where(eq(DuesPayment.memberId, Member.id))));
+
+      return duesPayingMembers;
+  }),
+
+  createDuesPayingMember: adminProcedure
+    .input(InsertMemberSchema.pick({ id: true }))
+    .mutation(async ({ input }) => {
+      if (!input.id) {
+        throw new TRPCError({
+          message: "Member ID is required to update dues paying status!",
+          code: "BAD_REQUEST",
+        });
+      }
+      await db.insert(DuesPayment).values({
+          memberId: input.id,
+          amount: DUES_PAYMENT as number,
+          paymentDate: new Date(),
+          year: new Date().getFullYear(),
+      });
+    }),
+
+  deleteDuesPayingMember: adminProcedure
+    .input(InsertMemberSchema.pick({ id: true }))
+    .mutation(async ({ input }) => {
+      if (!input.id) {
+        throw new TRPCError({
+          message: "Member ID is required to update dues paying status!",
+          code: "BAD_REQUEST",
+        });
+      }
+      await db.delete(DuesPayment).where(eq(DuesPayment.memberId, input.id));
+    }),
+
+    clearAllDues: adminProcedure
+      .mutation(async () => {
+        await db.delete(DuesPayment);
+    }),
+
 
   // Not deleting this, but we may need to save it for hackathons router
   /*getHackathons: protectedProcedure.query(async ({ ctx }) => {

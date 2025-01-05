@@ -5,7 +5,6 @@ import { Search } from "lucide-react";
 import SortButton from "../../_components/SortButton";
 
 import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
-import { Button } from "@forge/ui/button";
 import { Input } from "@forge/ui/input";
 import { Label } from "@forge/ui/label";
 import {
@@ -22,6 +21,7 @@ import { api } from "~/trpc/react";
 import { CreateEventButton } from "./create-event";
 import { DeleteEventButton } from "./delete-event";
 import { UpdateEventButton } from "./update-event";
+import SortButton from "../../_components/SortButton";
 
 type Event = InsertEvent;
 type SortField = keyof Event;
@@ -53,7 +53,7 @@ export function EventsTable() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-10 border-b pb-4">
+      <div className="flex items-center justify-between gap-2 border-b pb-4">
         <div className="relative w-full">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
