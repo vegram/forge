@@ -3,7 +3,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
 import { cn } from "@forge/ui";
-import { ThemeProvider } from "@forge/ui/theme";
+import { ThemeProvider, ThemeToggle } from "@forge/ui/theme";
 import { Toaster } from "@forge/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";
@@ -45,7 +45,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           GeistMono.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <TRPCReactProvider>{props.children}</TRPCReactProvider>
           <div className="fixed bottom-4 right-4">

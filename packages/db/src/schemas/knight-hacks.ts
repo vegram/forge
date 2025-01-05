@@ -4,7 +4,6 @@ import { createInsertSchema } from "drizzle-zod";
 
 import {
   EVENT_TAGS,
-  EVENT_TAGS,
   GENDERS,
   HACKATHON_APPLICATION_STATES,
   LEVELS_OF_STUDY,
@@ -19,7 +18,6 @@ import { User } from "./auth";
 const createTable = pgTableCreator((name) => `knight_hacks_${name}`);
 
 export const shirtSizeEnum = pgEnum("shirt_size", SHIRT_SIZES);
-export const eventTagEnum = pgEnum("event_tag", EVENT_TAGS);
 export const eventTagEnum = pgEnum("event_tag", EVENT_TAGS);
 export const genderEnum = pgEnum("gender", GENDERS);
 export const levelOfStudyEnum = pgEnum("level_of_study", LEVELS_OF_STUDY);
@@ -75,9 +73,6 @@ export const Member = createTable(
     uniquePhoneNumber: unique().on(t.phoneNumber),
   }),
 );
-
-export type InsertMember = typeof Member.$inferInsert;
-export type SelectMember = typeof Member.$inferSelect;
 
 export type InsertMember = typeof Member.$inferInsert;
 export type SelectMember = typeof Member.$inferSelect;
@@ -140,13 +135,11 @@ export const Event = createTable("event", (t) => ({
   googleId: t.varchar({ length: 255 }).notNull(),
   name: t.varchar({ length: 255 }).notNull(),
   tag: eventTagEnum().notNull(),
-  tag: eventTagEnum().notNull(),
   description: t.text().notNull(),
   start_datetime: t.timestamp().notNull(),
   end_datetime: t.timestamp().notNull(),
   location: t.varchar({ length: 255 }).notNull(),
   points: t.integer(),
-  numAttended: t.integer().notNull().default(0),
   numAttended: t.integer().notNull().default(0),
   // Can be null if the event is not associated with a hackathon (e.g. club events)
   hackathonId: t.uuid().references(() => Hackathon.id, {
