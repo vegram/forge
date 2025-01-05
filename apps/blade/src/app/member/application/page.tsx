@@ -15,9 +15,9 @@ export default async function MemberApplicationPage() {
 
   const isMember = await api.member.getMember();
 
-  // if (isMember) {
-  //   return redirect(SIGN_IN_PATH);
-  // }
+  if (isMember) {
+    return redirect(SIGN_IN_PATH);
+  }
 
   return (
     <main className="px-8 py-4">

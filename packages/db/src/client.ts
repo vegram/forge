@@ -1,3 +1,4 @@
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { drizzle } from "drizzle-orm/node-postgres";
 import Pool from "pg-pool";
 
@@ -9,7 +10,12 @@ const pool = new Pool({
   connectionString: env.DATABASE_URL,
 });
 
-export const db = drizzle({
+type AuthSchema = typeof authSchema;
+type KnightHacksSchema = typeof knightHacksSchema;
+
+type DatabaseSchema = AuthSchema & KnightHacksSchema;
+
+export const db: NodePgDatabase<DatabaseSchema> = drizzle({
   client: pool,
   schema: { ...authSchema, ...knightHacksSchema },
   casing: "snake_case",

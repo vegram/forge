@@ -5,7 +5,6 @@ import { auth } from "@forge/auth";
 import { SIGN_IN_PATH } from "~/consts";
 import { api, HydrateClient } from "~/trpc/server";
 import MemberTable from "./_components/members-table";
-import UpdateMemberButton from "./_components/update-member";
 
 export default async function Members() {
   // authentication
