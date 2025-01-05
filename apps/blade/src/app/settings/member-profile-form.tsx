@@ -38,7 +38,6 @@ import { toast } from "@forge/ui/toast";
 
 import type { api as serverCaller } from "~/trpc/server";
 import { api } from "~/trpc/react";
-import { MemberAppCard } from "../_components/option-cards";
 import DeleteMemberButton from "./_components/delete-member-button";
 
 export function MemberProfileForm({
@@ -213,14 +212,6 @@ export function MemberProfileForm({
     return (
       <div className="flex items-center justify-center">
         Something went wrong. Please refresh and try again.
-      </div>
-    );
-  }
-
-  if (!member) {
-    return (
-      <div className="flex items-center justify-center">
-        <MemberAppCard />
       </div>
     );
   }
