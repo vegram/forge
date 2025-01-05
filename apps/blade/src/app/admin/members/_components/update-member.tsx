@@ -113,18 +113,13 @@ export default function UpdateMemberButton({
 
               const points = Number(values.points);
 
-              const age =
-                new Date().getFullYear() - new Date(values.dob).getFullYear();
-
               updateMember.mutate({
                 id: member.id,
-                userId: member.userId,
                 firstName: values.firstName,
                 lastName: values.lastName,
                 email: values.email,
                 points,
                 dob: values.dob,
-                age,
                 school: values.school,
                 levelOfStudy: values.levelOfStudy,
                 phoneNumber: values.phoneNumber,

@@ -1,3 +1,4 @@
+import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 
 import { DUES_PAYMENT } from "@forge/consts/knight-hacks";
@@ -40,7 +41,14 @@ export const memberRouter = {
         where: (t, { eq }) => eq(t.id, id),
       });
 
-      const resume = input.resumeUrl ? input.resumeUrl : member?.resumeUrl;
+      if (!member) {
+        throw new TRPCError({
+          message: "Member not found!",
+          code: "NOT_FOUND",
+        });
+      }
+
+      const resume = input.resumeUrl ? input.resumeUrl : member.resumeUrl;
 
       // Check if the age has been updated
       const today = new Date();
@@ -56,8 +64,8 @@ export const memberRouter = {
         .update(Member)
         .set({
           ...updateData,
-          dob: dob,
           resumeUrl: resume,
+          dob: dob,
           age: newAge,
         })
         .where(eq(Member.id, id));
@@ -134,26 +142,6 @@ export const memberRouter = {
   clearAllDues: adminProcedure.mutation(async () => {
     await db.delete(DuesPayment);
   }),
-
-  // Not deleting this, but we may need to save it for hackathons router
-  /*getHackathons: protectedProcedure.query(async ({ ctx }) => {
-    const hackathonsToMember = await db
-      .select()
-      .from(Hackathon)
-      .innerJoin(
-        HackathonApplication,
-        eq(HackathonApplication.hackathonId, Hackathon.id),
-      )
-      .innerJoin(Member, eq(Member.id, HackathonApplication.memberId))
-      .where(
-        and(
-          eq(Member.userId, ctx.session.user.id),
-          eq(HackathonApplication.state, "checkedin"),
-        ),
-      );
-    const hackathonObjects = hackathonsToMember.map((item) => item.hackathon);
-    return hackathonObjects;
-  }), */
 
   getEvents: protectedProcedure.query(async ({ ctx }) => {
     const eventsToMember = await db
