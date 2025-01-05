@@ -20,12 +20,10 @@ export function UpdateMemberForm({ member }: { member: InsertMember }) {
   });
   const form = useForm({
     schema: InsertMemberSchema.extend({
-      // userId will be derived from the user's session on the server
-      userId: z.undefined(),
       firstName: z.string().min(1, "Required"),
       lastName: z.string().min(1, "Required"),
-      // Age will be derived from dob on the server
-      age: z.undefined(),
+      // Age will be derived from dob during submit
+      age: z.number(),
       email: z.string().email("Invalid email").min(1, "Required"),
       phoneNumber: z
         .string()
@@ -84,7 +82,19 @@ export function UpdateMemberForm({ member }: { member: InsertMember }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => {
-          updateMember.mutate(data);
+          const updatedData = { ...data, age: 9 };
+          const today = new Date();
+          const dobDate = new Date(data.dob);
+          let age = today.getFullYear() - dobDate.getFullYear();
+          const monthDiff = today.getMonth() - dobDate.getMonth();
+          if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < dobDate.getDate())
+          ) {
+            age--;
+          }
+          data.age = age;
+          updateMember.mutate(updatedData);
         })}
         className="flex flex-col justify-center space-y-6"
       ></form>

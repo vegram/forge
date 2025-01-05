@@ -57,11 +57,6 @@ export default function FinalDuesDialogButton({
     clearDues.mutate();
   };
 
-  const handlePaste = (e: Event) => {
-    e.preventDefault();
-    toast.info("Please type in the text, do not paste.");
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -95,7 +90,10 @@ export default function FinalDuesDialogButton({
               placeholder="Type the text shown above."
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
-              onPaste={handlePaste}
+              onPaste={(e) => {
+                e.preventDefault();
+                toast.info("Please type in the text, do not paste.");
+              }}
             />
           </div>
         </DialogDescription>

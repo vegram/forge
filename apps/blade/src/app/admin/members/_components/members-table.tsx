@@ -36,7 +36,7 @@ export default function MemberTable() {
   const duesMap = new Map();
 
   for (const status of duesPayingStatus ?? []) {
-    duesMap.set(status.id);
+    duesMap.set(status.id, true);
   }
 
   const filteredMembers = (members ?? []).filter((member) =>

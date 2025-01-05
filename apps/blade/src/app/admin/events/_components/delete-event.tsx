@@ -61,11 +61,6 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
     });
   };
 
-  const handlePaste = (e: Event) => {
-    e.preventDefault();
-    toast.info("Please type in the text, do not paste.");
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -92,7 +87,10 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
             placeholder='Type "I am absolutely sure"'
             value={confirmationText}
             onChange={(e) => setConfirmationText(e.target.value)}
-            onPaste={handlePaste}
+            onPaste={(e) => {
+              e.preventDefault();
+              toast.info("Please type in the text, do not paste.");
+            }}
           />
         </div>
 

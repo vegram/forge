@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { redirect } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
@@ -52,6 +53,11 @@ export function MemberProfileForm({
     initialData: data,
   });
 
+  // Member will always be true if we're here
+  if (!member) {
+    redirect("/");
+  }
+
   const updateMember = api.member.updateMember.useMutation({
     async onSuccess() {
       toast.success("Profile updated!");
@@ -73,12 +79,9 @@ export function MemberProfileForm({
 
   const form = useForm({
     schema: InsertMemberSchema.extend({
-      // userId will be derived from the user's session on the server
-      userId: z.undefined(),
       firstName: z.string().min(1, "Required"),
       lastName: z.string().min(1, "Required"),
-      // Age will be derived from dob on the server
-      age: z.undefined(),
+      age: z.number(),
       email: z.string().email("Invalid email").min(1, "Required"),
       phoneNumber: z
         .string()
@@ -167,20 +170,20 @@ export function MemberProfileForm({
         .or(z.literal("")),
     }),
     defaultValues: {
-      firstName: member?.firstName,
-      lastName: member?.lastName,
-      email: member?.email,
-      phoneNumber: member?.phoneNumber,
-      dob: member?.dob,
-      gradDate: member?.gradDate,
-      githubProfileUrl: member?.githubProfileUrl ?? "",
-      linkedinProfileUrl: member?.linkedinProfileUrl ?? "",
-      websiteUrl: member?.websiteUrl ?? "",
-      gender: member?.gender,
-      levelOfStudy: member?.levelOfStudy,
-      raceOrEthnicity: member?.raceOrEthnicity,
-      shirtSize: member?.shirtSize,
-      school: member?.school,
+      firstName: member.firstName,
+      lastName: member.lastName,
+      email: member.email,
+      phoneNumber: member.phoneNumber,
+      dob: member.dob,
+      gradDate: member.gradDate,
+      githubProfileUrl: member.githubProfileUrl ?? "",
+      linkedinProfileUrl: member.linkedinProfileUrl ?? "",
+      websiteUrl: member.websiteUrl ?? "",
+      gender: member.gender,
+      levelOfStudy: member.levelOfStudy,
+      raceOrEthnicity: member.raceOrEthnicity,
+      shirtSize: member.shirtSize,
+      school: member.school,
     },
   });
 
@@ -240,6 +243,18 @@ export function MemberProfileForm({
                   fileContent: base64File,
                 });
               }
+
+              const today = new Date();
+              const dobDate = new Date(values.dob);
+              let age = today.getFullYear() - dobDate.getFullYear();
+              const monthDiff = today.getMonth() - dobDate.getMonth();
+              if (
+                monthDiff < 0 ||
+                (monthDiff === 0 && today.getDate() < dobDate.getDate())
+              ) {
+                age--;
+              }
+              values.age = age;
 
               updateMember.mutate({
                 ...values,
