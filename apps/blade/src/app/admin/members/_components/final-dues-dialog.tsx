@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { CLEAR_DUES_MESSAGE } from "@forge/consts/knight-hacks";
 import { USE_CAUTION } from "@forge/consts/knight-hacks";
+import { toast } from "@forge/ui/toast";
 
 import { api } from "~/trpc/react";
 
@@ -40,6 +41,8 @@ export default function FinalDuesDialogButton(
         onSuccess() {
             toast.success("All dues cleared successfully!");
             setIsOpen(false);
+            setFirstOpen(false);
+            setSecondOpen(false);
             setConfirmText("");
         },
         onError(opts) {
@@ -55,6 +58,11 @@ export default function FinalDuesDialogButton(
     const handleClearDues = () => {
         setIsLoading(true);
         clearDues.mutate();
+    };
+
+    const handlePaste = (e) => {
+        e.preventDefault();
+        toast.info("Please type in the text, do not paste.");
     }
 
     return (
@@ -101,6 +109,7 @@ export default function FinalDuesDialogButton(
                             placeholder="Type the text shown above."
                             value={confirmText}
                             onChange={(e) => setConfirmText(e.target.value)}
+                            onPaste={handlePaste}
                         />
                     </div>
                 </DialogDescription>

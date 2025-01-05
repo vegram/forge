@@ -13,10 +13,10 @@ import { Button } from "@forge/ui/button";
 import { Input } from "@forge/ui/input";
 import { useState } from "react";
 import FinalDuesDialogButton from "./final-dues-dialog";
+import { toast } from "@forge/ui/toast";
 
 export default function SecondClearDuesDialogButton(
     {
-        firstOpen,
         setFirstOpen,
     }: 
     {
@@ -25,6 +25,11 @@ export default function SecondClearDuesDialogButton(
     }) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [confirmText, setConfirmText] = useState<string>("");
+
+    const handlePaste = (e) => {
+        e.preventDefault();
+        toast.info("Please type in the text, do not paste.");
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -59,6 +64,7 @@ export default function SecondClearDuesDialogButton(
                             placeholder='Type "I am absolutely sure that I would like to clear all dues."'
                             value={confirmText}
                             onChange={(e) => setConfirmText(e.target.value)}
+                            onPaste={handlePaste}
                         />
                     </div>
                 </DialogDescription>

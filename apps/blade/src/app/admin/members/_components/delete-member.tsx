@@ -52,6 +52,11 @@ export default function DeleteMemberButton({ member }: { member: InsertMember}) 
         });
     };
 
+    const handlePaste = (e) => {
+        e.preventDefault();
+        toast.info("Please type in the text, do not paste.");
+    }
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -79,6 +84,7 @@ export default function DeleteMemberButton({ member }: { member: InsertMember}) 
                         placeholder='Type "I am absolutely sure"'
                         value={confirm}
                         onChange={(e) => setConfirm(e.target.value)}
+                        onPaste={handlePaste}
                     />
                 </div>
 

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
-import SortButton from "../../_components/SortButton";
 
 import type { InsertEvent } from "@forge/db/schemas/knight-hacks";
 import { Input } from "@forge/ui/input";
@@ -117,12 +116,6 @@ export function EventsTable() {
                 setSortField={setSortField}
                 setSortOrder={setSortOrder}
               />
-            </TableHead>
-            <TableHead className="text-right">
-              <Label>Update</Label>
-            </TableHead>
-            <TableHead className="text-right">
-              <Label>Delete</Label>
             </TableHead>
             <TableHead className="text-right">
               <Label>Update</Label>

@@ -129,32 +129,6 @@ export default function UpdateMemberButton({ member }: { member: InsertMember })
         },
     });
 
-    const onSubmit = form.handleSubmit((values) => {
-        console.log("Form submitted ", values);
-        setIsLoading(true);
-
-        const age = new Date().getFullYear() - new Date(values.dob).getFullYear();
-
-        updateMember.mutate({
-            id: member.id,
-            userId: member.userId,
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            dob: values.dob,
-            age,
-            school: values.school,
-            levelOfStudy: values.levelOfStudy,
-            phoneNumber: values.phoneNumber,
-            gender: values.gender,
-            raceOrEthnicity: values.raceOrEthnicity,
-            shirtSize: values.shirtSize,
-            githubProfileUrl: values.githubProfileUrl,
-            linkedinProfileUrl: values.linkedinProfileUrl,
-            websiteUrl: values.websiteUrl,
-        })
-    });
-
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -165,7 +139,16 @@ export default function UpdateMemberButton({ member }: { member: InsertMember })
 
             <DialogContent>
                 <Form {...form}>
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={form.handleSubmit((values) => {
+                        setIsLoading(true);
+
+                        const age = new Date().getFullYear() - new Date(values.dob).getFullYear();
+
+                        updateMember.mutate({
+                            ...values,
+                            age
+                        });
+                    })}>
                         <DialogHeader className="pb-4">
                             <DialogTitle>
                                 Update Member
@@ -464,10 +447,10 @@ export default function UpdateMemberButton({ member }: { member: InsertMember })
                         </div>
                         <DialogFooter>
                             <Button type="submit">
-                                {isLoading ? 
-                                    <Loader2 className="animate-spin" /> : 
-                                    "Update Member" 
-                                }
+                                    {isLoading ? 
+                                        <Loader2 className="animate-spin" /> : 
+                                        "Update Member" 
+                                    }
                             </Button>
                         </DialogFooter>
                     </form>

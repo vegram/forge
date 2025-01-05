@@ -25,26 +25,7 @@ export const memberRouter = {
       });
     }),
 
-  adminCreateMember: adminProcedure
-    .input(InsertMemberSchema.omit(
-      { 
-        userId: true,
-        age: true,
-        levelOfStudy: true, 
-        raceOrEthnicity: true, 
-        githubProfileUrl: true,
-        linkedinProfileUrl: true,
-        websiteUrl: true,
-      }))
-    .mutation(async ({ input, ctx }) => {
-      await db.insert(Member).values({
-        ...input,
-        userId: ctx.session.user.id,
-        age: new Date().getFullYear() - new Date(input.dob).getFullYear()
-      });
-    }),
-
-    adminUpdateMember: adminProcedure
+    updateMember: adminProcedure
     .input(InsertMemberSchema)
     .mutation(async ({ input }) => {
       if (!input.id) {

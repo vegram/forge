@@ -3,6 +3,7 @@ import { CreditCard } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@forge/ui/card";
 
 import { DASHBOARD_ICON_SIZE } from "~/consts";
+import PaymentButton from "./payment-button";
 
 export function Payment({ status }: { status: boolean }) {
   return (
