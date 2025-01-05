@@ -35,7 +35,7 @@ export function QRCodePopup() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
+        <Button size="sm" className="gap-2">
           <QrCode className="h-4 w-4" />
           <span>Show QR Code</span>
         </Button>

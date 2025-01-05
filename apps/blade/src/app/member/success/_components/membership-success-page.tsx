@@ -98,7 +98,7 @@ export function MembershipSuccess() {
 
         <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <Link
-            href={SIGN_IN_PATH}
+            href={"/dashboard"}
             className={cn(
               buttonVariants({ variant: "primary" }),
               "flex items-center gap-2",
