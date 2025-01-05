@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Loader2, Trash2 } from "lucide-react";
+
+import { USE_CAUTION } from "@forge/consts/knight-hacks";
 import { Button } from "@forge/ui/button";
 import {
   Dialog,
@@ -14,7 +16,6 @@ import {
 } from "@forge/ui/dialog";
 import { Input } from "@forge/ui/input";
 import { toast } from "@forge/ui/toast";
-import { USE_CAUTION } from "@forge/consts/knight-hacks";
 
 import { api } from "~/trpc/react";
 
@@ -60,7 +61,7 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
     });
   };
 
-  const handlePaste = (e) => {
+  const handlePaste = (e: Event) => {
     e.preventDefault();
     toast.info("Please type in the text, do not paste.");
   };
@@ -84,7 +85,8 @@ export function DeleteEventButton({ event }: DeleteEventButtonProps) {
 
         <div className="space-y-4 py-2">
           <p>
-            Please type <strong>"I am absolutely sure"</strong> to confirm deletion:
+            Please type <strong>"I am absolutely sure"</strong> to confirm
+            deletion:
           </p>
           <Input
             placeholder='Type "I am absolutely sure"'

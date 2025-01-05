@@ -1,7 +1,8 @@
-import { TRPCError } from "@trpc/server";
 import type { TRPCRouterRecord } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 
-import { and, eq, isNull, exists } from "@forge/db";
+import { DUES_PAYMENT } from "@forge/consts/knight-hacks";
+import { and, eq, exists, isNull } from "@forge/db";
 import { db } from "@forge/db/client";
 import {
   DuesPayment,
@@ -10,7 +11,6 @@ import {
   InsertMemberSchema,
   Member,
 } from "@forge/db/schemas/knight-hacks";
-import { DUES_PAYMENT } from "@forge/consts/knight-hacks";
 
 import { adminProcedure, protectedProcedure } from "../trpc";
 
@@ -25,7 +25,7 @@ export const memberRouter = {
       });
     }),
 
-    updateMember: adminProcedure
+  updateMember: adminProcedure
     .input(InsertMemberSchema)
     .mutation(async ({ input }) => {
       if (!input.id) {
@@ -36,12 +36,14 @@ export const memberRouter = {
       }
       const { id, dob, ...updateData } = input;
 
-      await db.update(Member).set({
-        ...updateData,
-        age: new Date().getFullYear() - new Date(dob).getFullYear(),
-      }).where(eq(Member.id, id));
+      await db
+        .update(Member)
+        .set({
+          ...updateData,
+          age: new Date().getFullYear() - new Date(dob).getFullYear(),
+        })
+        .where(eq(Member.id, id));
     }),
-
 
   deleteMember: adminProcedure
     .input(InsertMemberSchema.pick({ id: true }))
@@ -50,7 +52,7 @@ export const memberRouter = {
         throw new TRPCError({
           message: "Member ID is required to delete a member!",
           code: "BAD_REQUEST",
-        });      
+        });
       }
       await db.delete(Member).where(eq(Member.id, input.id));
     }),
@@ -70,11 +72,16 @@ export const memberRouter = {
     const duesPayingMembers = await db
       .select()
       .from(Member)
-      .where(exists(db.select()
-        .from(DuesPayment)
-        .where(eq(DuesPayment.memberId, Member.id))));
+      .where(
+        exists(
+          db
+            .select()
+            .from(DuesPayment)
+            .where(eq(DuesPayment.memberId, Member.id)),
+        ),
+      );
 
-      return duesPayingMembers;
+    return duesPayingMembers;
   }),
 
   createDuesPayingMember: adminProcedure
@@ -87,10 +94,10 @@ export const memberRouter = {
         });
       }
       await db.insert(DuesPayment).values({
-          memberId: input.id,
-          amount: DUES_PAYMENT as number,
-          paymentDate: new Date(),
-          year: new Date().getFullYear(),
+        memberId: input.id,
+        amount: DUES_PAYMENT as number,
+        paymentDate: new Date(),
+        year: new Date().getFullYear(),
       });
     }),
 
@@ -106,11 +113,9 @@ export const memberRouter = {
       await db.delete(DuesPayment).where(eq(DuesPayment.memberId, input.id));
     }),
 
-    clearAllDues: adminProcedure
-      .mutation(async () => {
-        await db.delete(DuesPayment);
-    }),
-
+  clearAllDues: adminProcedure.mutation(async () => {
+    await db.delete(DuesPayment);
+  }),
 
   // Not deleting this, but we may need to save it for hackathons router
   /*getHackathons: protectedProcedure.query(async ({ ctx }) => {
@@ -148,5 +153,5 @@ export const memberRouter = {
 
   getMembers: protectedProcedure.query(async () => {
     return db.query.Member.findMany();
-  })
+  }),
 } satisfies TRPCRouterRecord;

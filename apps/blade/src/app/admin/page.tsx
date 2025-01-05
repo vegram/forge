@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@forge/auth";
 
-import { api, HydrateClient } from "~/trpc/server";
 import { SIGN_IN_PATH } from "~/consts";
+import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Admin() {
   const session = await auth();

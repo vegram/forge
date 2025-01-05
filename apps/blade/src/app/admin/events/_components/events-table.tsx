@@ -17,10 +17,10 @@ import {
 } from "@forge/ui/table";
 
 import { api } from "~/trpc/react";
+import SortButton from "../../_components/SortButton";
 import { CreateEventButton } from "./create-event";
 import { DeleteEventButton } from "./delete-event";
 import { UpdateEventButton } from "./update-event";
-import SortButton from "../../_components/SortButton";
 
 type Event = InsertEvent;
 type SortField = keyof Event;
@@ -68,8 +68,8 @@ export function EventsTable() {
         <TableHeader>
           <TableRow>
             <TableHead>
-              <SortButton 
-                field="name" 
+              <SortButton
+                field="name"
                 label="Name"
                 sortField={sortField}
                 sortOrder={sortOrder}
@@ -78,29 +78,29 @@ export function EventsTable() {
               />
             </TableHead>
             <TableHead>
-              <SortButton 
-                field="tag" 
-                label="Tag" 
-                sortField={sortField}  
+              <SortButton
+                field="tag"
+                label="Tag"
+                sortField={sortField}
                 sortOrder={sortOrder}
                 setSortField={setSortField}
                 setSortOrder={setSortOrder}
               />
             </TableHead>
             <TableHead>
-              <SortButton 
-                field="start_datetime" 
-                label="Date" 
-                sortField={sortField}  
+              <SortButton
+                field="start_datetime"
+                label="Date"
+                sortField={sortField}
                 sortOrder={sortOrder}
                 setSortField={setSortField}
                 setSortOrder={setSortOrder}
               />
             </TableHead>
             <TableHead>
-              <SortButton 
-                field="location" 
-                label="Location" 
+              <SortButton
+                field="location"
+                label="Location"
                 sortField={sortField}
                 sortOrder={sortOrder}
                 setSortField={setSortField}
@@ -108,9 +108,9 @@ export function EventsTable() {
               />
             </TableHead>
             <TableHead className="text-right">
-              <SortButton 
-                field="numAttended" 
-                label="Attended" 
+              <SortButton
+                field="numAttended"
+                label="Attended"
                 sortField={sortField}
                 sortOrder={sortOrder}
                 setSortField={setSortField}

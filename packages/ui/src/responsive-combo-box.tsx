@@ -23,7 +23,7 @@ interface ResponsiveComboBoxProps<T> {
   onItemSelect?: (item: T) => void;
   buttonPlaceholder?: string;
   inputPlaceholder?: string;
-  isDisabled?: boolean,
+  isDisabled?: boolean;
 }
 
 /**
