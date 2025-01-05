@@ -56,19 +56,11 @@ const minutes = Array.from({ length: 12 }, (_, i) =>
 
 const amPmOptions = ["AM", "PM"] as const;
 
-const UpdateFormSchema = InsertEventSchema.omit({
-  start_datetime: true,
-  end_datetime: true,
-  discordId: true,
-  googleId: true,
-}).extend({
+const UpdateFormSchema = InsertEventSchema.omit({ datetime: true }).extend({
   date: z.string(),
-  startHour: z.string(),
-  startMinute: z.string(),
-  startAmPm: z.enum(amPmOptions),
-  endHour: z.string(),
-  endMinute: z.string(),
-  endAmPm: z.enum(amPmOptions),
+  hour: z.string(),
+  minute: z.string(),
+  amPm: z.enum(amPmOptions),
 });
 
 function parseDateTime(isoString: string) {
@@ -113,8 +105,8 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
       setIsOpen(false);
       form.reset();
     },
-    onError(opts) {
-      toast.error(opts.message);
+    onError() {
+      toast.error("Oops! Something went wrong. Please try again later.");
     },
     async onSettled() {
       await utils.event.invalidate();
@@ -131,86 +123,54 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
       location: "",
       tag: EVENT_TAGS[0],
       date: "",
-      startHour: "",
-      startMinute: "",
-      startAmPm: "PM",
-      endHour: "",
-      endMinute: "",
-      endAmPm: "PM",
+      hour: "",
+      minute: "",
+      amPm: "PM",
     },
   });
 
   // On mount or whenever `event` changes, prefill form
   useEffect(() => {
-    const {
-      date,
-      hour: startHour,
-      minute: startMinute,
-      amPm: startAmPm,
-    } = parseDateTime(event.start_datetime.toString());
-    const {
-      hour: endHour,
-      minute: endMinute,
-      amPm: endAmPm,
-    } = parseDateTime(event.end_datetime.toString());
+    const { date, hour, minute, amPm } = parseDateTime(
+      event.datetime.toString(),
+    );
     form.reset({
       name: event.name,
       description: event.description,
       location: event.location,
       tag: event.tag,
       date,
-      startHour,
-      startMinute,
-      startAmPm,
-      endHour,
-      endMinute,
-      endAmPm,
+      hour,
+      minute,
+      amPm,
     });
   }, [event, form]);
 
   const onSubmit = form.handleSubmit((values) => {
     setIsLoading(true);
-    // Convert start date + hour/minute/amPm to a valid Date object
-    const finalStartDate = new Date(values.date);
-    let hour24 = parseInt(values.startHour, 10) || 0;
-    if (values.startAmPm === "PM" && hour24 < 12) {
+
+    // Combine date + hour/minute/amPm into a single Date object
+    const finalDate = new Date(values.date);
+    let hour24 = parseInt(values.hour, 10) || 0;
+    if (values.amPm === "PM" && hour24 < 12) {
       hour24 += 12;
     }
-    if (values.startAmPm === "AM" && hour24 === 12) {
+    if (values.amPm === "AM" && hour24 === 12) {
       hour24 = 0;
     }
-    finalStartDate.setHours(hour24, parseInt(values.startMinute, 10) || 0);
-
-    // Convert end date + hour/minute/amPm to a valid Date object
-    const finalEndDate = new Date(values.date);
-    let endHour24 = parseInt(values.endHour, 10) || 0;
-    if (values.endAmPm === "PM" && endHour24 < 12) {
-      endHour24 += 12;
-    }
-    if (values.endAmPm === "AM" && endHour24 === 12) {
-      endHour24 = 0;
-    }
-    finalEndDate.setHours(endHour24, parseInt(values.endMinute, 10) || 0);
-
-    // Ensure the end date is after the start date
-    if (finalEndDate <= finalStartDate) {
-      toast.error("End date must be after the start date.");
-      setIsLoading(false);
-      return;
-    }
+    finalDate.setHours(hour24, parseInt(values.minute, 10) || 0);
 
     // Make update call
     updateEvent.mutate({
-      id: event.id,
-      discordId: event.discordId,
-      googleId: event.googleId,
+      id: event.id, // Include the event ID here
       name: values.name,
       description: values.description,
       location: values.location,
       tag: values.tag,
-      start_datetime: finalStartDate,
-      end_datetime: finalEndDate,
+      datetime: finalDate,
     });
+
+    console.log("Updating event with ID:", event.id, values, finalDate);
   });
 
   return (
@@ -224,12 +184,11 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
 
       <DialogContent className="sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px]">
         <Form {...form}>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} noValidate>
             <DialogHeader>
               <DialogTitle>Update Event</DialogTitle>
               <DialogDescription>
-                Update the details for the new event. Click update when you're
-                done.
+                Modify details for {event.name}. Click save when you're done.
               </DialogDescription>
             </DialogHeader>
 
@@ -270,7 +229,6 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
                       </FormLabel>
                       <FormControl>
                         <Select
-                          // Use defaultValue if the field already has a value
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
@@ -321,25 +279,13 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
                           <PopoverContent className="w-auto p-0">
                             <Calendar
                               mode="single"
-                              // If field.value is an empty string, we pass undefined to Calendar
                               selected={
                                 field.value ? new Date(field.value) : undefined
                               }
                               onSelect={(selectedDate) => {
-                                // Make sure the selected date is not null
-                                if (!selectedDate) {
-                                  toast.error("Please select a date.");
-                                  return;
+                                if (selectedDate) {
+                                  field.onChange(selectedDate.toISOString());
                                 }
-
-                                // Make sure the selected date is in the future
-                                if (selectedDate < new Date()) {
-                                  toast.error("Please select a future date.");
-                                  return;
-                                }
-
-                                // Convert the chosen date to an ISO string
-                                field.onChange(selectedDate.toISOString());
                               }}
                               initialFocus
                             />
@@ -352,14 +298,14 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
                 )}
               />
 
-              {/* Start Time (Hour, Minute, AM/PM) */}
+              {/* Time (Hour, Minute, AM/PM) */}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Start</Label>
+                <Label className="text-right">Time</Label>
                 <div className="col-span-3 flex items-center space-x-2">
                   {/* Hour */}
                   <FormField
                     control={form.control}
-                    name="startHour"
+                    name="hour"
                     render={({ field }) => (
                       <FormItem className="mb-0">
                         <FormControl>
@@ -390,7 +336,7 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
                   {/* Minute */}
                   <FormField
                     control={form.control}
-                    name="startMinute"
+                    name="minute"
                     render={({ field }) => (
                       <FormItem className="mb-0">
                         <FormControl>
@@ -420,104 +366,7 @@ export function UpdateEventButton({ event }: { event: InsertEvent }) {
                   {/* AM/PM */}
                   <FormField
                     control={form.control}
-                    name="startAmPm"
-                    render={({ field }) => (
-                      <FormItem className="mb-0">
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="w-[80px]">
-                                <SelectValue placeholder="AM/PM" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {amPmOptions.map((option) => (
-                                <SelectItem key={option} value={option}>
-                                  {option}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              {/* End Time (Hour, Minute, AM/PM) */}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">End</Label>
-                <div className="col-span-3 flex items-center space-x-2">
-                  {/* Hour */}
-                  <FormField
-                    control={form.control}
-                    name="endHour"
-                    render={({ field }) => (
-                      <FormItem className="mb-0">
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="w-[80px]">
-                                <SelectValue placeholder="HH" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {hours.map((h) => (
-                                <SelectItem key={h} value={h}>
-                                  {h}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <span>:</span>
-
-                  {/* Minute */}
-                  <FormField
-                    control={form.control}
-                    name="endMinute"
-                    render={({ field }) => (
-                      <FormItem className="mb-0">
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="w-[80px]">
-                                <SelectValue placeholder="MM" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {minutes.map((m) => (
-                                <SelectItem key={m} value={m}>
-                                  {m}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* AM/PM */}
-                  <FormField
-                    control={form.control}
-                    name="endAmPm"
+                    name="amPm"
                     render={({ field }) => (
                       <FormItem className="mb-0">
                         <FormControl>
