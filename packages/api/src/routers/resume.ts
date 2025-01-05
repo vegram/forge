@@ -85,6 +85,7 @@ export const resumeRouter = {
     const filename = member.resumeUrl;
 
     if (!filename) {
+      console.error("No resume URL found for user");
       return { url: null };
     }
 
@@ -92,6 +93,7 @@ export const resumeRouter = {
       // Make sure the file actually exists
       await s3Client.statObject(bucketName, filename);
     } catch {
+      console.error("Resume file does not exist in S3");
       return { url: null };
     }
 
