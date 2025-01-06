@@ -265,7 +265,7 @@ export function MemberProfileForm({
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John" {...field} />
+                  <Input placeholder="Lenny" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -278,7 +278,7 @@ export function MemberProfileForm({
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Doe" {...field} />
+                  <Input placeholder="Dragonson" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -291,7 +291,7 @@ export function MemberProfileForm({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="johndoe@gmail.com" {...field} />
+                  <Input placeholder="tk@knighthacks.org" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -235,7 +235,7 @@ export function MemberApplicationForm() {
             <FormItem>
               <FormLabel>First Name</FormLabel>
               <FormControl>
-                <Input placeholder="John" {...field} />
+                <Input placeholder="Lenny" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -248,7 +248,7 @@ export function MemberApplicationForm() {
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input placeholder="Doe" {...field} />
+                <Input placeholder="Dragonson" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -262,7 +262,7 @@ export function MemberApplicationForm() {
             <FormItem>
               <FormLabel>Discord Username</FormLabel>
               <FormControl>
-                <Input placeholder="JohnDoe" {...field} />
+                <Input placeholder="T.K" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -275,7 +275,7 @@ export function MemberApplicationForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="johndoe@gmail.com" {...field} />
+                <Input placeholder="tk@knighthacks.org" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

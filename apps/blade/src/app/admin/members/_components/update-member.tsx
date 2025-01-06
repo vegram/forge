@@ -153,7 +153,7 @@ export default function UpdateMemberButton({
                         First Name
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="John" {...field} />
+                        <Input placeholder="Lenny" {...field} />
                       </FormControl>
                       <FormMessage className="my-auto whitespace-nowrap" />
                     </div>
@@ -171,7 +171,7 @@ export default function UpdateMemberButton({
                         Last Name
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Doe" {...field} />
+                        <Input placeholder="Dragonson" {...field} />
                       </FormControl>
                       <FormMessage className="my-auto whitespace-nowrap" />
                     </div>
@@ -189,7 +189,7 @@ export default function UpdateMemberButton({
                         Discord User
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="JohnDoe" {...field} />
+                        <Input placeholder="T.K" {...field} />
                       </FormControl>
                       <FormMessage className="my-auto whitespace-nowrap" />
                     </div>
@@ -207,7 +207,7 @@ export default function UpdateMemberButton({
                         Email
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="johndoe@gmail.com" {...field} />
+                        <Input placeholder="tk@knighthacks.org" {...field} />
                       </FormControl>
                       <FormMessage className="my-auto whitespace-nowrap" />
                     </div>
