@@ -46,7 +46,6 @@ export const eventRouter = {
       .leftJoin(EventAttendee, eq(Event.id, EventAttendee.eventId))
       .groupBy(Event.id)
       .orderBy(desc(Event.start_datetime));
-    console.log("Events: ", events);
     return events;
   }),
   createEvent: adminProcedure
