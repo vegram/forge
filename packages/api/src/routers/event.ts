@@ -24,7 +24,7 @@ import {
 
 import { env } from "../env";
 import { adminProcedure } from "../trpc";
-import { calendar, discord } from "../utils";
+import { calendar, discord, log } from "../utils";
 
 const GOOGLE_CALENDAR_ID =
   env.NODE_ENV === "production"
@@ -52,7 +52,7 @@ export const eventRouter = {
     .input(
       InsertEventSchema.omit({ id: true, discordId: true, googleId: true }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       // Step 0: Declare consts
       const startDatetime = new Date(input.start_datetime);
       const startIsoTimestamp = startDatetime.toISOString();
@@ -176,10 +176,17 @@ export const eventRouter = {
           code: "BAD_REQUEST",
         });
       }
+
+      await log({
+        title: "Event Creation",
+        message: `The event "${formattedName}" was created.`,
+        color: "blade_purple",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
     }),
   updateEvent: adminProcedure
     .input(InsertEventSchema)
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       if (!input.id) {
         throw new TRPCError({
           message: "Event ID is required to update an Event.",
@@ -248,6 +255,13 @@ export const eventRouter = {
         });
       }
 
+      await log({
+        title: "Event Updated",
+        message: `The event "${formattedName}" was updated.`,
+        color: "blade_purple",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
+
       // Step 3: Update the event in the database
       await db.update(Event).set(input).where(eq(Event.id, input.id));
     }),
@@ -255,7 +269,7 @@ export const eventRouter = {
     .input(
       InsertEventSchema.pick({ id: true, discordId: true, googleId: true }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       if (!input.id) {
         throw new TRPCError({
           message: "Event ID is required to delete an Event.",
@@ -287,6 +301,19 @@ export const eventRouter = {
         throw new TRPCError({
           message: "Failed to delete event in Google Calendar",
           code: "BAD_REQUEST",
+        });
+      }
+
+      const event = await db.select().from(Event).where(eq(Event.id, input.id));
+      if (event.length === 0) {
+        const formattedName = event[0]?.tag
+          ? `[${event[0].tag.toUpperCase().replace(" ", "-")}] ${event[0].name}`
+          : "";
+        await log({
+          title: "Event Deleted",
+          message: `The event "${formattedName}" was deleted.`,
+          color: "uhoh_red",
+          user: ctx.session.user.name ?? ctx.session.user.discordUserId,
         });
       }
 

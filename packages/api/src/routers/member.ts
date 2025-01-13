@@ -29,6 +29,7 @@ import {
 
 import { minioClient } from "../minio/minio-client";
 import { adminProcedure, protectedProcedure } from "../trpc";
+import { log } from "../utils";
 
 export const memberRouter = {
   createMember: protectedProcedure
@@ -92,6 +93,13 @@ export const memberRouter = {
         userId: ctx.session.user.id,
         age: newAge,
       });
+
+      await log({
+        title: "Member Created",
+        message: `${input.firstName} ${input.lastName} has signed up for Blade`,
+        color: "tk_blue",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
     }),
 
   updateMember: protectedProcedure
@@ -145,18 +153,38 @@ export const memberRouter = {
           age: newAge,
         })
         .where(eq(Member.userId, ctx.session.user.id));
+
+      await log({
+        title: "Member Updated",
+        message: `${input.firstName} ${input.lastName} has updated their Blade profile.
+        \nBefore: ${JSON.stringify(member)}
+        \nAfter: ${JSON.stringify({ ...member, ...updateData })}`,
+        color: "tk_blue",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
     }),
 
   deleteMember: protectedProcedure
     .input(InsertMemberSchema.pick({ id: true }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       if (!input.id) {
         throw new TRPCError({
           message: "Member ID is required to delete a member!",
           code: "BAD_REQUEST",
         });
       }
+      const member = await db
+        .select()
+        .from(Member)
+        .where(eq(Member.id, input.id));
       await db.delete(Member).where(eq(Member.id, input.id));
+
+      await log({
+        title: "Member Deleted",
+        message: `Profile for ${member[0]?.firstName} ${member[0]?.lastName} has been deleted.`,
+        color: "uhoh_red",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
     }),
 
   getMember: protectedProcedure.query(async ({ ctx }) => {
@@ -187,7 +215,7 @@ export const memberRouter = {
 
   createDuesPayingMember: adminProcedure
     .input(InsertMemberSchema.pick({ id: true }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       if (!input.id) {
         throw new TRPCError({
           message: "Member ID is required to update dues paying status!",
@@ -200,11 +228,23 @@ export const memberRouter = {
         paymentDate: new Date(),
         year: new Date().getFullYear(),
       });
+
+      const member = await db
+        .select()
+        .from(Member)
+        .where(eq(Member.id, input.id));
+
+      await log({
+        title: "Dues Status Accredited",
+        message: `${member[0]?.firstName} ${member[0]?.lastName} has been accredited dues status.`,
+        color: "success_green",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
     }),
 
   deleteDuesPayingMember: adminProcedure
     .input(InsertMemberSchema.pick({ id: true }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       if (!input.id) {
         throw new TRPCError({
           message: "Member ID is required to update dues paying status!",
@@ -212,10 +252,28 @@ export const memberRouter = {
         });
       }
       await db.delete(DuesPayment).where(eq(DuesPayment.memberId, input.id));
+
+      const member = await db
+        .select()
+        .from(Member)
+        .where(eq(Member.id, input.id));
+
+      await log({
+        title: "Dues Status Revoked",
+        message: `${member[0]?.firstName} ${member[0]?.lastName} has been revoked of dues status.`,
+        color: "uhoh_red",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
     }),
 
-  clearAllDues: adminProcedure.mutation(async () => {
+  clearAllDues: adminProcedure.mutation(async ({ ctx }) => {
     await db.delete(DuesPayment);
+    await log({
+      title: "ALL DUES CLEARED",
+      message: `ALL DUES HAVE BEEN CLEARED. THIS ACTION IS REVERSIBLE FOR ONLY 7 DAYS.`,
+      color: "uhoh_red",
+      user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+    });
   }),
 
   getEvents: protectedProcedure.query(async ({ ctx }) => {
@@ -248,9 +306,13 @@ export const memberRouter = {
         eventPoints: z.number(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const member = await db.query.Member.findFirst({
         where: (t, { eq }) => eq(t.userId, input.userId),
+      });
+
+      const event = await db.query.Event.findFirst({
+        where: (t, { eq }) => eq(t.id, input.eventId),
       });
 
       if (!member) {
@@ -287,6 +349,13 @@ export const memberRouter = {
           points: sql`${Member.points} + ${input.eventPoints}`, // Ensure input.eventPoints is parsed as a number
         })
         .where(eq(Member.id, member.id));
+
+      await log({
+        title: "Event Check-In",
+        message: `${member.firstName} ${member.lastName} has been checked in to event ${event?.name}`,
+        color: "success_green",
+        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      });
 
       return {
         message: `${member.firstName} ${member.lastName} has been checked in for the event`,
