@@ -92,6 +92,7 @@ export const memberRouter = {
         discordUser: ctx.session.user.name ?? "",
         userId: ctx.session.user.id,
         age: newAge,
+        phoneNumber: input.phoneNumber == "" ? null : input.phoneNumber,
       });
 
       await log({
@@ -151,6 +152,7 @@ export const memberRouter = {
           resumeUrl: resume,
           dob: dob,
           age: newAge,
+          phoneNumber: input.phoneNumber == "" ? null : input.phoneNumber,
         })
         .where(eq(Member.userId, ctx.session.user.id));
 
