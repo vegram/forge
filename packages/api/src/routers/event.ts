@@ -178,8 +178,8 @@ export const eventRouter = {
       }
 
       await log({
-        title: "Event Creation",
-        message: `The event "${formattedName}" was created.`,
+        title: "Event Created",
+        message: `The event **${formattedName}** was created.`,
         color: "blade_purple",
         userId: ctx.session.user.discordUserId,
       });
@@ -190,6 +190,17 @@ export const eventRouter = {
       if (!input.id) {
         throw new TRPCError({
           message: "Event ID is required to update an Event.",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      const event = await db.query.Event.findFirst({
+        where: (t, { eq }) => eq(t.id, input.id ?? ""),
+      });
+
+      if (!event) {
+        throw new TRPCError({
+          message: "Event not found.",
           code: "BAD_REQUEST",
         });
       }
@@ -255,9 +266,75 @@ export const eventRouter = {
         });
       }
 
+      // Create a log of the changes for logger
+      const updateData = { ...input };
+      const changes = Object.keys(updateData).reduce(
+        (acc, key) => {
+          if (
+            key !== "start_datetime" &&
+            key !== "end_datetime" &&
+            event[key as keyof typeof event] !==
+              updateData[key as keyof typeof updateData]
+          ) {
+            acc[key] = {
+              before: event[key as keyof typeof event],
+              after: updateData[key as keyof typeof updateData],
+            };
+          }
+          return acc;
+        },
+        {} as Record<
+          string,
+          {
+            before: string | number | Date | null;
+            after: string | number | Date | null | undefined;
+          }
+        >,
+      );
+
+      // Add start_datetime and end_datetime to changes if they are different
+      if (String(event.start_datetime) !== String(input.start_datetime)) {
+        changes.start_datetime = {
+          before: event.start_datetime,
+          after: input.start_datetime,
+        };
+      }
+      if (String(event.end_datetime) !== String(input.end_datetime)) {
+        changes.end_datetime = {
+          before: event.end_datetime,
+          after: input.end_datetime,
+        };
+      }
+
+      // Convert the changes object to a string for the log
+      const changesString = Object.entries(changes)
+        .map(([key, value]) => {
+          const before =
+            value.before instanceof Date
+              ? value.before.toLocaleString("en-US", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                  hour12: true,
+                })
+              : String(value.before);
+          const after =
+            value.after instanceof Date
+              ? value.after.toLocaleString("en-US", {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                  hour12: true,
+                })
+              : String(value.after);
+          return `\n${key}\n **Before:** ${before} -> **After:** ${after}`;
+        })
+        .join("\n");
+
+      const oldFormattedName = `[${event.tag.toUpperCase().replace(" ", "-")}] ${event.name}`;
+
       await log({
         title: "Event Updated",
-        message: `The event "${formattedName}" was updated.`,
+        message: `Event **${oldFormattedName}** was updated.
+        \n**Changes:\n**${changesString}`,
         color: "blade_purple",
         userId: ctx.session.user.discordUserId,
       });
@@ -267,7 +344,13 @@ export const eventRouter = {
     }),
   deleteEvent: adminProcedure
     .input(
-      InsertEventSchema.pick({ id: true, discordId: true, googleId: true }),
+      InsertEventSchema.pick({
+        id: true,
+        discordId: true,
+        googleId: true,
+        tag: true,
+        name: true,
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       if (!input.id) {
@@ -304,18 +387,13 @@ export const eventRouter = {
         });
       }
 
-      const event = await db.select().from(Event).where(eq(Event.id, input.id));
-      if (event.length === 0) {
-        const formattedName = event[0]?.tag
-          ? `[${event[0].tag.toUpperCase().replace(" ", "-")}] ${event[0].name}`
-          : "";
-        await log({
-          title: "Event Deleted",
-          message: `The event "${formattedName}" was deleted.`,
-          color: "uhoh_red",
-          userId: ctx.session.user.discordUserId,
-        });
-      }
+      const formattedName = `[${input.tag.toUpperCase().replace(" ", "-")}] ${input.name}`;
+      await log({
+        title: "Event Deleted",
+        message: `The event **${formattedName}** was deleted.`,
+        color: "uhoh_red",
+        userId: ctx.session.user.discordUserId,
+      });
 
       // Step 3: Delete the event in the database
       await db.delete(Event).where(eq(Event.id, input.id));

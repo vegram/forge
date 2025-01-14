@@ -154,6 +154,7 @@ export const memberRouter = {
         })
         .where(eq(Member.userId, ctx.session.user.id));
 
+      // Create a log of the changes for logger
       const changes = Object.keys(updateData).reduce(
         (acc, key) => {
           if (
@@ -176,15 +177,17 @@ export const memberRouter = {
         >,
       );
 
+      // Convert the changes object to a string for the log
       const changesString = Object.entries(changes)
         .map(([key, value]) => {
           return `\n${key}\n **Before:** ${value.before} -> **After:** ${value.after}`;
         })
         .join("\n");
 
+      // Log the changes
       await log({
         title: "Member Updated",
-        message: `${member.firstName} ${member.lastName}'s Blade Profile has been Updated.
+        message: `${member.firstName} ${member.lastName}'s Blade Profile has been updated.
         \n**Changes:**\n${changesString}`,
         color: "tk_blue",
         userId: ctx.session.user.discordUserId,
@@ -192,7 +195,9 @@ export const memberRouter = {
     }),
 
   deleteMember: protectedProcedure
-    .input(InsertMemberSchema.pick({ id: true }))
+    .input(
+      InsertMemberSchema.pick({ id: true, firstName: true, lastName: true }),
+    )
     .mutation(async ({ input, ctx }) => {
       if (!input.id) {
         throw new TRPCError({
@@ -200,15 +205,12 @@ export const memberRouter = {
           code: "BAD_REQUEST",
         });
       }
-      const member = await db
-        .select()
-        .from(Member)
-        .where(eq(Member.id, input.id));
+
       await db.delete(Member).where(eq(Member.id, input.id));
 
       await log({
         title: "Member Deleted",
-        message: `Profile for ${member[0]?.firstName} ${member[0]?.lastName} has been deleted.`,
+        message: `Profile for ${input.firstName} ${input.lastName} has been deleted.`,
         color: "uhoh_red",
         userId: ctx.session.user.discordUserId,
       });
@@ -378,7 +380,7 @@ export const memberRouter = {
         .where(eq(Member.id, member.id));
 
       await log({
-        title: "Event Check-In",
+        title: "User Checked-In",
         message: `${member.firstName} ${member.lastName} has been checked in to event ${event?.name}`,
         color: "success_green",
         userId: ctx.session.user.discordUserId,
