@@ -20,7 +20,15 @@ import { toast } from "@forge/ui/toast";
 
 import { api } from "~/trpc/react";
 
-export default function DeleteMemberButton({ memberId, firstName, lastName }: { memberId: string, firstName: string, lastName: string }) {
+export default function DeleteMemberButton({
+  memberId,
+  firstName,
+  lastName,
+}: {
+  memberId: string;
+  firstName: string;
+  lastName: string;
+}) {
   const router = useRouter();
   const [confirmationText, setConfirmationText] = useState("");
   const [isLoading, setIsLoading] = useState(false);

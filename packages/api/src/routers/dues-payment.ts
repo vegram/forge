@@ -82,7 +82,7 @@ export const duesPaymentRouter = {
 
       await log({
         message: `A member has successfully paid their dues for the 2024-2025 School Year`,
-        title: "Dues Payment",
+        title: "Dues Paid",
         color: "success_green",
         userId: ctx.session.user.discordUserId,
       });
