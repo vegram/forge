@@ -37,7 +37,7 @@ export default function DeleteMemberButton({
   // Our TRPC mutation for deleting the event
   const deleteMember = api.member.deleteMember.useMutation({
     onSuccess() {
-      toast.success("Member form successfully!");
+      toast.success("Member successfully deleted.");
       setIsOpen(false);
       router.push("/");
     },

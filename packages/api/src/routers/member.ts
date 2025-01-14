@@ -187,7 +187,7 @@ export const memberRouter = {
       // Log the changes
       await log({
         title: "Member Updated",
-        message: `${member.firstName} ${member.lastName}'s Blade Profile has been updated.
+        message: `Blade profile for ${member.firstName} ${member.lastName} has been updated.
         \n**Changes:**\n${changesString}`,
         color: "tk_blue",
         userId: ctx.session.user.discordUserId,
