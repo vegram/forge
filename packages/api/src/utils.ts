@@ -71,19 +71,19 @@ export async function log({
   title,
   message,
   color,
-  user,
+  userId,
 }: {
   title: string;
   message: string;
   color: "tk_blue" | "blade_purple" | "uhoh_red" | "success_green";
-  user: string;
+  userId: string;
 }) {
   await discord.post(Routes.channelMessages(KNIGHTHACKS_LOG_CHANNEL), {
     body: {
       embeds: [
         {
           title: title,
-          description: message,
+          description: message + `\n\nUser: <@${userId}>`.toString(),
           color: {
             tk_blue: 0x1a73e8,
             blade_purple: 0xcca4f4,
@@ -91,7 +91,7 @@ export async function log({
             success_green: 0x00ff00,
           }[color],
           footer: {
-            text: user + " at " + new Date().toLocaleString(),
+            text: new Date().toLocaleString(),
           },
         },
       ],

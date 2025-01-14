@@ -98,7 +98,7 @@ export const memberRouter = {
         title: "Member Created",
         message: `${input.firstName} ${input.lastName} has signed up for Blade`,
         color: "tk_blue",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
     }),
 
@@ -154,13 +154,40 @@ export const memberRouter = {
         })
         .where(eq(Member.userId, ctx.session.user.id));
 
+      const changes = Object.keys(updateData).reduce(
+        (acc, key) => {
+          if (
+            member[key as keyof typeof member] !==
+            updateData[key as keyof typeof updateData]
+          ) {
+            acc[key] = {
+              before: member[key as keyof typeof member],
+              after: updateData[key as keyof typeof updateData],
+            };
+          }
+          return acc;
+        },
+        {} as Record<
+          string,
+          {
+            before: string | number | null;
+            after: string | number | null | undefined;
+          }
+        >,
+      );
+
+      const changesString = Object.entries(changes)
+        .map(([key, value]) => {
+          return `\n${key}\n **Before:** ${value.before} -> **After:** ${value.after}`;
+        })
+        .join("\n");
+
       await log({
         title: "Member Updated",
-        message: `${input.firstName} ${input.lastName} has updated their Blade profile.
-        \nBefore: ${JSON.stringify(member)}
-        \nAfter: ${JSON.stringify({ ...member, ...updateData })}`,
+        message: `${member.firstName} ${member.lastName}'s Blade Profile has been Updated.
+        \n**Changes:**\n${changesString}`,
         color: "tk_blue",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
     }),
 
@@ -183,7 +210,7 @@ export const memberRouter = {
         title: "Member Deleted",
         message: `Profile for ${member[0]?.firstName} ${member[0]?.lastName} has been deleted.`,
         color: "uhoh_red",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
     }),
 
@@ -238,7 +265,7 @@ export const memberRouter = {
         title: "Dues Status Accredited",
         message: `${member[0]?.firstName} ${member[0]?.lastName} has been accredited dues status.`,
         color: "success_green",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
     }),
 
@@ -262,7 +289,7 @@ export const memberRouter = {
         title: "Dues Status Revoked",
         message: `${member[0]?.firstName} ${member[0]?.lastName} has been revoked of dues status.`,
         color: "uhoh_red",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
     }),
 
@@ -272,7 +299,7 @@ export const memberRouter = {
       title: "ALL DUES CLEARED",
       message: `ALL DUES HAVE BEEN CLEARED. THIS ACTION IS REVERSIBLE FOR ONLY 7 DAYS.`,
       color: "uhoh_red",
-      user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+      userId: ctx.session.user.discordUserId,
     });
   }),
 
@@ -354,7 +381,7 @@ export const memberRouter = {
         title: "Event Check-In",
         message: `${member.firstName} ${member.lastName} has been checked in to event ${event?.name}`,
         color: "success_green",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
 
       return {

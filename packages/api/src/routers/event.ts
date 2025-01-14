@@ -181,7 +181,7 @@ export const eventRouter = {
         title: "Event Creation",
         message: `The event "${formattedName}" was created.`,
         color: "blade_purple",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
     }),
   updateEvent: adminProcedure
@@ -259,7 +259,7 @@ export const eventRouter = {
         title: "Event Updated",
         message: `The event "${formattedName}" was updated.`,
         color: "blade_purple",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
 
       // Step 3: Update the event in the database
@@ -313,7 +313,7 @@ export const eventRouter = {
           title: "Event Deleted",
           message: `The event "${formattedName}" was deleted.`,
           color: "uhoh_red",
-          user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+          userId: ctx.session.user.discordUserId,
         });
       }
 

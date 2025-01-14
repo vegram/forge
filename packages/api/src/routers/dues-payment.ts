@@ -84,7 +84,7 @@ export const duesPaymentRouter = {
         message: `A member has successfully paid their dues for the 2024-2025 School Year`,
         title: "Dues Payment",
         color: "success_green",
-        user: ctx.session.user.name ?? ctx.session.user.discordUserId,
+        userId: ctx.session.user.discordUserId,
       });
 
       return {
