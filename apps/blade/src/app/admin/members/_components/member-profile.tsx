@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { FaGithub, FaGlobe, FaLinkedin } from "react-icons/fa";
+import { MEMBER_PROFILE_ICON_SIZE } from "@forge/consts/knight-hacks";
 
 import type { InsertMember } from "@forge/db/schemas/knight-hacks";
 import {
