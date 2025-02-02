@@ -1,12 +1,11 @@
 import type { CommandInteraction } from "discord.js";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-
-import {
-  CPE_FLOWCHART_URL,
+import { 
   CS_FLOWCHART_URL,
-  DS_FLOWCHART_URL,
   IT_FLOWCHART_URL,
-} from "../consts";
+  CPE_FLOWCHART_URL,
+  DS_FLOWCHART_URL
+ } from "../consts";
 
 export const data = new SlashCommandBuilder()
   .setName("flowchart")
