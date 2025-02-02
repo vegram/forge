@@ -8,13 +8,6 @@ import {
   IT_FLOWCHART_URL,
 } from "../consts";
 
-import {
-  CPE_FLOWCHART_URL,
-  CS_FLOWCHART_URL,
-  DS_FLOWCHART_URL,
-  IT_FLOWCHART_URL,
-} from "../consts";
-
 export const data = new SlashCommandBuilder()
   .setName("flowchart")
   .setDescription("Get the UCF flowchart for your major!")
