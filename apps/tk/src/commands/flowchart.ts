@@ -1,5 +1,11 @@
 import type { CommandInteraction } from "discord.js";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { 
+  CS_FLOWCHART_URL,
+  IT_FLOWCHART_URL,
+  CPE_FLOWCHART_URL,
+  DS_FLOWCHART_URL
+ } from "../consts";
 
 import {
   CPE_FLOWCHART_URL,
