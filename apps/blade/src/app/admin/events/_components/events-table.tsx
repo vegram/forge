@@ -154,6 +154,15 @@ export function EventsTable() {
           </TableRow>
         </TableHeader>
 
+        <TableRow>
+          <TableCell 
+            className="text- sm:text-center font-bold bg-muted/50"
+            colSpan={8}
+          >
+            Upcoming Events
+          </TableCell>
+        </TableRow>
+
         <TableBody>
           <TableRow>
             <TableCell
