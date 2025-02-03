@@ -25,6 +25,7 @@ import { EventDetailsButton } from "./event-details";
 import { UpdateEventButton } from "./update-event";
 import { ViewAttendanceButton } from "./view-attendance-button";
 import { EventDetailsButton } from "./event-details";
+import { getFormattedDate } from "~/lib/utils";
 
 type Event = ReturnEvent;
 type SortField = keyof Event;
