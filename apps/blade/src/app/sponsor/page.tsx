@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import { SPONSOR_VIDEO_LINK } from "@forge/consts/knight-hacks";
 import { Button } from "@forge/ui/button";
