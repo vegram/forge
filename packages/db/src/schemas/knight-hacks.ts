@@ -13,6 +13,8 @@ import {
   SCHOOLS,
   SHIRT_SIZES,
   SPONSOR_TIERS,
+  EVENT_FEEDBACK_HEARD,
+  EVENT_FEEDBACK_SIMILAR_EVENT
 } from "@forge/consts/knight-hacks";
 
 import { User } from "./auth";
