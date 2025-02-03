@@ -1,6 +1,5 @@
 import type { CommandInteraction } from "discord.js";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { TK_DUCK_URL } from "../consts";
 import JIMP from "jimp";
 
 import { TK_DUCK_URL } from "../consts";
