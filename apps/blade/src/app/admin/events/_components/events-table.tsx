@@ -21,9 +21,9 @@ import { api } from "~/trpc/react";
 import SortButton from "../../_components/SortButton";
 import { CreateEventButton } from "./create-event";
 import { DeleteEventButton } from "./delete-event";
+import { EventDetailsButton } from "./event-details";
 import { UpdateEventButton } from "./update-event";
 import { ViewAttendanceButton } from "./view-attendance-button";
-import { EventDetailsButton } from "./event-details";
 
 type Event = ReturnEvent;
 type SortField = keyof Event;
