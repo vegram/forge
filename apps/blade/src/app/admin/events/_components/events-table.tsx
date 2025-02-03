@@ -21,7 +21,6 @@ import { api } from "~/trpc/react";
 import SortButton from "../../_components/SortButton";
 import { CreateEventButton } from "./create-event";
 import { DeleteEventButton } from "./delete-event";
-import { EventDetailsButton } from "./event-details";
 import { UpdateEventButton } from "./update-event";
 import { ViewAttendanceButton } from "./view-attendance-button";
 import { EventDetailsButton } from "./event-details";
@@ -162,6 +161,95 @@ export function EventsTable() {
             </TableCell>
           </TableRow>
           {upcomingEvents.map((event) => (
+            <TableRow key={event.id}>
+              <TableCell className="text-center font-medium">
+                {event.name}
+              </TableCell>
+              <TableCell className="text-center">{event.tag}</TableCell>
+
+              <TableCell className="text-center">
+                {getFormattedDate(event.start_datetime)}
+              </TableCell>
+
+              <TableCell>{event.location}</TableCell>
+
+              <TableCell className="text-right">
+                <ViewAttendanceButton
+                  event={event}
+                  numAttended={event.numAttended}
+                />
+              </TableCell>
+
+              <TableCell className="text-center">
+                <EventDetailsButton event={event} />
+              </TableCell>
+
+              <TableCell className="text-center">
+                <UpdateEventButton event={event} />
+              </TableCell>
+
+              <TableCell className="text-center">
+                <DeleteEventButton event={event} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+
+        <TableBody>
+          <TableRow>
+            <TableCell
+              className="bg-muted/50 text-left font-bold sm:text-center"
+              colSpan={8}
+            >
+              Previous Events
+            </TableCell>
+          </TableRow>
+          {previousEvents.map((event) => (
+            <TableRow key={event.id}>
+              <TableCell className="text-center font-medium">
+                {event.name}
+              </TableCell>
+              <TableCell className="text-center">{event.tag}</TableCell>
+
+              <TableCell className="text-center">
+                {getFormattedDate(event.start_datetime)}
+              </TableCell>
+
+              <TableCell>{event.location}</TableCell>
+
+              <TableCell className="text-right">
+                <ViewAttendanceButton
+                  event={event}
+                  numAttended={event.numAttended}
+                />
+              </TableCell>
+
+              <TableCell className="text-center">
+                <EventDetailsButton event={event} />
+              </TableCell>
+
+              <TableCell className="text-center">
+                <UpdateEventButton event={event} />
+              </TableCell>
+
+              <TableCell className="text-center">
+                <DeleteEventButton event={event} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+
+        <TableRow>
+          <TableCell 
+            className="text-left sm:text-center font-bold bg-muted/50"
+            colSpan={8}
+          >
+            Previous Events
+          </TableCell>
+        </TableRow>
+
+        <TableBody>
+          {sortedEvents.map((event) => (
             <TableRow key={event.id}>
               <TableCell className="text-center font-medium">
                 {event.name}
