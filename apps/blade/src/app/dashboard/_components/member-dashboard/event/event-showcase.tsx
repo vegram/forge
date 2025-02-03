@@ -21,7 +21,6 @@ import {
 } from "@forge/ui/dialog";
 
 import type { api } from "~/trpc/server";
-import type { InsertMember } from "@forge/db/schemas/knight-hacks";
 import { DASHBOARD_ICON_SIZE } from "~/consts";
 import { formatDateTime, getTagColor } from "~/lib/utils";
 import { EventFeedbackForm } from "./event-feedback";
