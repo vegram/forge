@@ -24,8 +24,6 @@ import { DeleteEventButton } from "./delete-event";
 import { EventDetailsButton } from "./event-details";
 import { UpdateEventButton } from "./update-event";
 import { ViewAttendanceButton } from "./view-attendance-button";
-import { EventDetailsButton } from "./event-details";
-import { getFormattedDate } from "~/lib/utils";
 
 type Event = ReturnEvent;
 type SortField = keyof Event;
@@ -155,14 +153,12 @@ export function EventsTable() {
           </TableRow>
         </TableHeader>
 
-        <TableRow>
-          <TableCell 
-            className="text- sm:text-center font-bold bg-muted/50"
-            colSpan={8}
-          >
-            Upcoming Events
-          </TableCell>
-        </TableRow>
+        <TableCell
+          className="text- bg-muted/50 font-bold sm:text-center"
+          colSpan={8}
+        >
+          Upcoming Events
+        </TableCell>
 
         <TableBody>
           <TableRow>
