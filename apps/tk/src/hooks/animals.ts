@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises -- Cron job callback can't return promises*/
 import { EmbedBuilder, WebhookClient } from "discord.js";
-import { 
-  TK_CAT_URL,
-  TK_CAPYBARA_URL,
-  TK_DUCK_URL,
-} from "../consts";
 import JIMP from "jimp";
 import cron from "node-cron";
 

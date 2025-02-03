@@ -21,10 +21,9 @@ import { api } from "~/trpc/react";
 import SortButton from "../../_components/SortButton";
 import { CreateEventButton } from "./create-event";
 import { DeleteEventButton } from "./delete-event";
+import { EventDetailsButton } from "./event-details";
 import { UpdateEventButton } from "./update-event";
 import { ViewAttendanceButton } from "./view-attendance-button";
-import { EventDetailsButton } from "./event-details";
-import { getFormattedDate } from "~/lib/utils";
 
 type Event = ReturnEvent;
 type SortField = keyof Event;
@@ -240,9 +239,8 @@ export function EventsTable() {
           ))}
         </TableBody>
 
-        <TableRow>
-          <TableCell 
-            className="text-left sm:text-center font-bold bg-muted/50"
+        <TableCell
+            className="bg-muted/50 text-left font-bold sm:text-center"
             colSpan={8}
           >
             Previous Events
