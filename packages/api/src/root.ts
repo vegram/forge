@@ -6,7 +6,6 @@ import { memberRouter } from "./routers/member";
 import { qrRouter } from "./routers/qr";
 import { resumeRouter } from "./routers/resume";
 import { userRouter } from "./routers/user";
-import { eventFeedbackRouter } from "./routers/event-feedback";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter<{
