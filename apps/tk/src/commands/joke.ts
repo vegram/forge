@@ -3,10 +3,6 @@ import { SlashCommandBuilder } from "discord.js";
 
 import { TK_JOKE_URL } from "../consts";
 
-import { TK_JOKE_URL } from "../consts";
-
-import { TK_JOKE_URL } from "../consts";
-
 interface JokeProps {
   type: string;
   joke: string;

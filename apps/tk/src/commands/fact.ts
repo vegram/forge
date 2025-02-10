@@ -3,10 +3,6 @@ import { SlashCommandBuilder } from "discord.js";
 
 import { TK_FACTS_URL } from "../consts";
 
-import { TK_FACTS_URL } from "../consts";
-
-import { TK_FACTS_URL } from "../consts";
-
 // FACT COMMAND
 // GET FACTS
 
