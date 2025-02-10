@@ -242,7 +242,7 @@ export function EventsTable() {
         </TableBody>
 
         <TableRow>
-        <TableCell
+          <TableCell
             className="bg-muted/50 text-left font-bold sm:text-center"
             colSpan={8}
           >
